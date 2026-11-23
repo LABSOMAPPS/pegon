@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tulis Pegon — Latin ke Arab Pegon</title>
+<meta name="description" content="Tulis Pegon: ubah tulisan Latin menjadi aksara Arab Pegon sesuai SOP Penulisan Pegon.">
+<meta name="theme-color" content="#b87a0c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23b87a0c'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='white' font-family='serif'%3E%D9%81%3C/text%3E%3C/svg%3E">
+<script>
+  /* ===== PENGATURAN =====
+     Isi API_URL dengan URL aplikasi web Apps Script (berakhiran /exec).
+     Jika dikosongkan, aplikasi berjalan dalam "mode uji": data hanya tersimpan di browser. */
+  window.PEGON_CONFIG = {
+    API_URL: 'https://script.google.com/macros/s/AKfycbwBie2cnwgg2Bh_83QWU17nVw0Y3H2rWt52PviqlvK8cZwr8BcsLM6VlVARTsgDlvC2/exec'
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #faf7f0;
+    --bg-2: #f6efe0;
+    --surface: rgba(255, 255, 255, 0.94);
+    --surface-solid: #ffffff;
+    --surface-soft: #fdfbf6;
+    --ink: #1c1917;
+    --ink-2: #44403c;
+    --muted: #78716c;
+    --line: #efe5d1;
+    --line-strong: #dfd0b2;
+
+    --sky: #a16207;
+    --cyan: #d97706;
+    --teal: #92400e;
+    --emerald: #059669;
+    --emerald-soft: #dcfce7;
+    --cyan-soft: #fef9c3;
+    --sky-soft: #fef3c7;
+    --amber-soft: #ffedd5;
+    --amber-ink: #b45309;
+    --violet-soft: #f3e8ff;
+    --violet-ink: #7e22ce;
+    --warn: #e11d48;
+    --warn-soft: #ffe4e6;
+
+    --grad-hero: linear-gradient(125deg, #8a5607 0%, #b87a0c 46%, #d99b18 85%, #c5860d 100%);
+    --grad-primary: linear-gradient(135deg, #b45309 0%, #d97706 52%, #eab308 100%);
+    --grad-primary-hover: linear-gradient(135deg, #92400e 0%, #b45309 52%, #ca8a04 100%);
+
+    --shadow-sm: 0 2px 8px rgba(120, 53, 15, 0.05), 0 1px 2px rgba(120, 53, 15, 0.03);
+    --shadow-md: 0 10px 30px -8px rgba(180, 83, 9, 0.12), 0 4px 12px -4px rgba(120, 53, 15, 0.05);
+    --shadow-glow: 0 8px 22px -4px rgba(217, 119, 6, 0.40);
+
+    --radius-xl: 22px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 10px;
+    --ar: 'Scheherazade New', 'Noto Naskh Arabic', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(245, 158, 11, 0.16), transparent 36%),
+      radial-gradient(circle at 92% 18%, rgba(234, 179, 8, 0.14), transparent 38%),
+      radial-gradient(circle at 50% 95%, rgba(16, 185, 129, 0.08), transparent 45%),
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', 'Noto Naskh Arabic', system-ui, -apple-system, sans-serif;
+    font-size: 14.5px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ================= Moving Light Keyframes ================= */
+  @keyframes driftOrbA {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.48; }
+    50% { transform: translate(42px, 18px) scale(1.16); opacity: 0.72; }
+  }
+  @keyframes driftOrbB {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.36; }
+    50% { transform: translate(-38px, -16px) scale(1.14); opacity: 0.62; }
+  }
+  @keyframes lightSweep {
+    0% { transform: translateX(-140%) skewX(-22deg); }
+    45%, 100% { transform: translateX(260%) skewX(-22deg); }
+  }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.45); }
+    70% { box-shadow: 0 0 0 10px rgba(225, 29, 72, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.8); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 18px;
+  }
+
+  /* ================= Hero App Header ================= */
+  header {
+    position: relative;
+    overflow: hidden;
+    background: var(--grad-hero);
+    color: #ffffff;
+    padding: 22px 0 22px;
+    border-bottom-left-radius: 28px;
+    border-bottom-right-radius: 28px;
+    box-shadow: 0 14px 36px -12px rgba(180, 83, 9, 0.36);
+  }
+
+  /* Subtle geometric heritage pattern */
+  header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.1'%3E%3Cpath d='M28 4l6.5 17.5L52 28l-17.5 6.5L28 52l-6.5-17.5L4 28l17.5-6.5z'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Moving light beam sweep across header */
+  header::after {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: 0;
+    width: 38%;
+    height: 170%;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+    animation: lightSweep 8.5s ease-in-out infinite;
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(36px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-orb.a {
+    width: 260px; height: 260px;
+    top: -110px; left: -60px;
+    background: radial-gradient(circle, rgba(254, 240, 138, 0.72), transparent 70%);
+    animation: driftOrbA 10s ease-in-out infinite;
+  }
+  .hero-orb.b {
+    width: 300px; height: 300px;
+    bottom: -140px; right: -40px;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.62), transparent 70%);
+    animation: driftOrbB 12s ease-in-out infinite;
+  }
+
+  .hero-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 8px 18px rgba(120, 53, 15, 0.24);
+  }
+  .brand-icon svg {
+    width: 24px;
+    height: 24px;
+    color: #ffffff;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    line-height: 1.2;
+  }
+  h1 .ar {
+    font-family: var(--ar);
+    font-weight: 700;
+    font-size: 31px;
+    color: #fffbeb;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    line-height: 1;
+  }
+  header p {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #ffffff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #86efac;
+    box-shadow: 0 0 8px #86efac;
+  }
+
+  /* ================= Segmented APK Navigation ================= */
+  nav.tabs {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 5px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    flex-wrap: wrap;
+  }
+
+  nav.tabs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 12px;
+    transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  nav.tabs a svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  nav.tabs a:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+  }
+  nav.tabs a.active {
+    background: #ffffff;
+    color: var(--sky);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14);
+  }
+  nav.tabs .n {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  nav.tabs a.active .n {
+    background: var(--sky-soft);
+    color: var(--sky);
+  }
+
+  /* ================= Main Layout ================= */
+  main {
+    padding: 18px 0 40px;
+  }
+
+  .view { display: none; }
+  .view.on {
+    display: block;
+    animation: fadeSlideUp 0.28s ease-out;
+  }
+
+  /* ================= Example Chips ================= */
+  .chips-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 2px 0 16px;
+    flex-wrap: wrap;
+  }
+  .chips-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--teal);
+    margin-right: 2px;
+  }
+  .chips {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid #eadcc2;
+    color: var(--ink-2);
+    border-radius: 999px;
+    padding: 6px 13px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+  }
+  .chip:hover {
+    border-color: var(--cyan);
+    color: var(--sky);
+    background: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(217, 119, 6, 0.18);
+  }
+
+  /* ================= Grid & Cards ================= */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+  @media (max-width: 860px) {
+    .row2 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:focus-within {
+    border-color: #f59e0b;
+    box-shadow: 0 12px 32px -8px rgba(217, 119, 6, 0.20);
+  }
+
+  .card-h {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(253,249,240,0.82) 100%);
+    flex-wrap: wrap;
+  }
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .ico-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .ico-badge svg { width: 16px; height: 16px; }
+  .ico-badge.sky { background: var(--sky-soft); color: var(--sky); }
+  .ico-badge.emerald { background: var(--emerald-soft); color: var(--emerald); }
+  .ico-badge.cyan { background: var(--cyan-soft); color: var(--teal); }
+  .ico-badge.violet { background: var(--violet-soft); color: var(--violet-ink); }
+  .ico-badge.amber { background: var(--amber-soft); color: var(--amber-ink); }
+
+  .card-h h2 {
+    margin: 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-2);
+    font-weight: 700;
+  }
+
+  /* ================= Editor & Output ================= */
+  textarea {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    resize: vertical;
+    font: inherit;
+    color: var(--ink);
+    padding: 16px 18px;
+    min-height: 230px;
+    outline: none;
+  }
+  textarea::placeholder { color: #94a3b8; }
+
+  #latin {
+    font-size: 16.5px;
+    line-height: 1.65;
+  }
+
+  #out {
+    direction: rtl;
+    text-align: right;
+    font-family: var(--ar);
+    font-size: 34px;
+    line-height: 1.95;
+    padding: 16px 20px;
+    min-height: 230px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #0b2922;
+    background: linear-gradient(180deg, #ffffff 0%, #fffdf7 100%);
+  }
+  #out.empty {
+    color: #94a3b8;
+    font-size: 22px;
+  }
+
+  /* ================= Buttons ================= */
+  .btns {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  button {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid var(--line-strong);
+    background: #ffffff;
+    color: var(--ink-2);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+  button svg { width: 15px; height: 15px; flex-shrink: 0; }
+  button:hover {
+    border-color: var(--cyan);
+    color: var(--sky);
+    background: #fffbeb;
+    transform: translateY(-1px);
+  }
+  button:active { transform: translateY(0); }
+  button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  button.primary {
+    position: relative;
+    overflow: hidden;
+    background: var(--grad-primary);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: var(--shadow-glow);
+  }
+  button.primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+    transform: translateX(-140%) skewX(-20deg);
+    animation: lightSweep 5.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  button.primary:hover {
+    background: var(--grad-primary-hover);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 10px 26px -4px rgba(217, 119, 6, 0.50);
+  }
+
+  button.danger {
+    color: var(--warn);
+    border-color: #fecdd3;
+    background: #fff5f6;
+  }
+  button.danger:hover {
+    background: var(--warn);
+    color: #ffffff;
+    border-color: var(--warn);
+  }
+
+  /* Voice Note Button */
+  .mic { display: none; align-items: center; gap: 6px; }
+  .mic.ready { display: inline-flex; }
+  .mic .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+    transition: background 0.2s;
+  }
+  .mic.live {
+    background: var(--warn);
+    border-color: var(--warn);
+    color: #ffffff;
+    animation: pulseRing 1.5s infinite;
+  }
+  .mic.live .dot {
+    background: #ffffff;
+    animation: pulseDot 1s infinite;
+  }
+
+  .listen {
+    display: none;
+    padding: 10px 16px;
+    border-top: 1px dashed #fda4af;
+    font-size: 13.5px;
+    color: var(--warn);
+    background: var(--warn-soft);
+  }
+  .listen.on { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .listen i { color: #9f1239; font-style: normal; font-weight: 500; }
+
+  /* ================= Footer & Options Bar ================= */
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
+    background: var(--surface-soft);
+    font-size: 12.5px;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .word-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--sky-soft);
+    color: var(--sky);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  kbd {
+    font-family: inherit;
+    font-weight: 700;
+    background: #ffffff;
+    border: 1px solid var(--line-strong);
+    color: var(--sky);
+    border-radius: 6px;
+    padding: 1px 6px;
+    font-size: 12px;
+    box-shadow: 0 1px 0 var(--line-strong);
+  }
+
+  .opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    background: var(--surface-soft);
+  }
+  .opts label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .opts select {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 9px;
+    border: 1px solid var(--line-strong);
+    background: #ffffff;
+    color: var(--ink);
+    outline: none;
+    cursor: pointer;
+  }
+  .opts select:focus { border-color: var(--cyan); }
+
+  input[type=range] {
+    accent-color: var(--sky);
+    cursor: pointer;
+    width: 110px;
+  }
+  .size-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal);
+    background: var(--cyan-soft);
+    padding: 2px 8px;
+    border-radius: 999px;
+    min-width: 42px;
+    text-align: center;
+  }
+
+  /* Modern APK Toggle Switch for Checkboxes */
+  input[type=checkbox] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 38px;
+    height: 22px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.22s ease;
+    outline: none;
+  }
+  input[type=checkbox]::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.2);
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  input[type=checkbox]:checked {
+    background: var(--grad-primary);
+  }
+  input[type=checkbox]:checked::after {
+    transform: translateX(16px);
+  }
+
+  /* ================= Tables & Tags ================= */
+  .scroll {
+    max-height: 360px;
+    overflow: auto;
+  }
+  .scroll::-webkit-scrollbar { width: 7px; height: 7px; }
+  .scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+  .scroll::-webkit-scrollbar-track { background: transparent; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+  }
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    background: #faf5e8;
+  }
+  tbody tr { transition: background 0.15s ease; }
+  tbody tr:hover { background: #fffdf5; }
+  tbody tr:last-child td { border-bottom: 0; }
+
+  td.ar {
+    font-family: var(--ar);
+    font-size: 25px;
+    direction: rtl;
+    text-align: right;
+    white-space: nowrap;
+    color: #0b2922;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #475569;
+  }
+  .tag.arab { background: var(--amber-soft); color: var(--amber-ink); }
+  .tag.di { background: var(--sky-soft); color: var(--sky); }
+  .tag.own { background: var(--violet-soft); color: var(--violet-ink); }
+
+  .empty-row td {
+    color: var(--muted);
+    text-align: center;
+    padding: 24px 16px;
+  }
+
+  /* ================= Checklist & Status ================= */
+  .check {
+    list-style: none;
+    margin: 0;
+    padding: 12px 16px;
+  }
+  .check li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 6px 0;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    border-bottom: 1px dashed #efe5d1;
+  }
+  .check li:last-child { border-bottom: 0; }
+  .ok, .bad {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    font-size: 11.5px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .ok { background: var(--emerald-soft); color: var(--emerald); }
+  .bad { background: var(--warn-soft); color: var(--warn); }
+
+  .note {
+    font-size: 12.5px;
+    color: var(--muted);
+    padding: 10px 16px 14px;
+    margin: 0;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: var(--muted);
+  }
+  .status.online { background: var(--emerald-soft); color: var(--emerald); }
+  .status.warn { background: var(--amber-soft); color: var(--amber-ink); }
+
+  .ksum {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+  }
+  .ksum b {
+    font-size: 26px;
+    font-weight: 800;
+    background: var(--grad-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-right: 4px;
+  }
+
+  a.lnk {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--sky);
+    font-weight: 700;
+    font-size: 13.5px;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--sky-soft);
+    transition: all 0.18s ease;
+  }
+  a.lnk:hover {
+    background: var(--sky);
+    color: #ffffff;
+  }
+
+  /* ================= Kamus Form & Toolbar ================= */
+  .kform {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    padding: 16px;
+    align-items: end;
+  }
+  @media (max-width: 720px) {
+    .kform { grid-template-columns: 1fr; }
+  }
+  .kform label {
+    display: block;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .inp {
+    width: 100%;
+    font: inherit;
+    font-size: 14.5px;
+    padding: 10px 13px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: #ffffff;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .inp:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18);
+  }
+  .inp.ar {
+    font-family: var(--ar);
+    font-size: 24px;
+    direction: rtl;
+    padding: 3px 13px;
+  }
+
+  .pegon-wrap { display: flex; gap: 8px; }
+
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-soft);
+  }
+  .toolbar .inp { max-width: 280px; padding: 8px 12px; font-size: 13.5px; }
+  .toolbar .sp { flex: 1; }
+
+  .acts {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .imp {
+    display: none;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    background: #fffbeb;
+  }
+  .imp.on { display: block; }
+  .imp textarea {
+    min-height: 110px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: #ffffff;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 13px;
+    margin: 10px 0;
+  }
+  .kamus-list td { padding: 8px 14px; }
+
+  /* ================= Pedoman & Aturan ================= */
+  .guide {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 14px 16px 18px;
+  }
+  .guide > div {
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 12px 14px;
+    overflow-x: auto;
+  }
+  .guide h3 {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    color: var(--sky);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .guide h3::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 3px;
+    background: var(--grad-primary);
+  }
+  .guide td { padding: 6px 8px; font-size: 13.5px; }
+  .guide td.ar { font-size: 22px; }
+  .guide td .ar { font-family: var(--ar); font-size: 21px; color: #0b2922; }
+
+  .pf {
+    display: grid;
+    grid-template-columns: 1.2fr .7fr 1.4fr auto;
+    gap: 6px;
+    align-items: center;
+    padding: 6px 0;
+  }
+  @media (max-width: 720px) { .pf { grid-template-columns: 1fr; } }
+  .pf .inp { padding: 6px 9px; font-size: 13.5px; }
+  .pf .inp.ar { font-size: 21px; padding: 1px 9px; }
+
+  td.pa { white-space: nowrap; text-align: right; }
+  td.pa button { padding: 4px 9px; font-size: 12px; margin-left: 4px; }
+
+  .addrow {
+    margin-top: 10px;
+    font-size: 12.5px;
+    border-style: dashed;
+    border-color: var(--cyan);
+    color: var(--sky);
+    background: #ffffff;
+    width: 100%;
+  }
+  .muted { color: var(--muted); font-size: 13px; }
+
+  header { padding-top: calc(22px + env(safe-area-inset-top, 0px)); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+  main { padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); }
+
+  /* ================= Peran: Admin & Pengguna ================= */
+  body:not(.is-admin) .admin-only { display: none !important; }
+  .hero-side { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .role-btn {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 6px 13px 6px 7px;
+    font-size: 12.5px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+  .role-btn:hover { background: rgba(255, 255, 255, 0.3); color: #ffffff; border-color: rgba(255,255,255,0.5); }
+  .role-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #ffffff; color: var(--sky);
+    border-radius: 999px; padding: 2px 9px; font-size: 11.5px; font-weight: 800;
+  }
+  .role-pill svg { width: 13px; height: 13px; }
+  body.is-admin .role-pill { background: #fef3c7; color: #92400e; }
+
+  .modal {
+    position: fixed; inset: 0; z-index: 1000;
+    display: grid; place-items: center; padding: 18px;
+    background: rgba(28, 25, 23, 0.45);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    animation: fadeSlideUp 0.2s ease-out;
+  }
+  .modal[hidden] { display: none; }
+  .modal-card {
+    width: 100%; max-width: 380px;
+    background: var(--surface-solid);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 30px 60px -20px rgba(120, 53, 15, 0.45);
+    padding: 20px;
+  }
+  .modal-card h3 { margin: 0 0 4px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+  .modal-card p { margin: 0 0 14px; color: var(--muted); font-size: 13px; }
+  .modal-card .btns { justify-content: flex-end; margin-top: 14px; }
+  .err { color: var(--warn); font-size: 12.5px; font-weight: 600; min-height: 18px; margin: 8px 0 0; }
+  .pw-grid { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 10px; padding: 14px 16px 16px; align-items: end; }
+  @media (max-width: 720px) { .pw-grid { grid-template-columns: 1fr; } }
+  .pw-grid label { display: block; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+
+  /* ================= Toast ================= */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 600;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    opacity: 0;
+    transition: all 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+    z-index: 999;
+    max-width: 92vw;
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ================= Mobile APK Polish ================= */
+  @media (max-width: 600px) {
+    header {
+      padding: calc(18px + env(safe-area-inset-top, 0px)) 0 18px;
+      border-bottom-left-radius: 22px;
+      border-bottom-right-radius: 22px;
+    }
+    .wrap { padding: 0 12px; }
+    h1 { font-size: 20px; }
+    h1 .ar { font-size: 26px; }
+    .brand-icon { width: 42px; height: 42px; border-radius: 13px; }
+    nav.tabs { width: 100%; justify-content: space-between; }
+    nav.tabs a { flex: 1; justify-content: center; padding: 8px 10px; font-size: 13px; }
+    textarea, #out { min-height: 185px; }
+    .card { border-radius: 18px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hero-orb a" aria-hidden="true"></div>
+  <div class="hero-orb b" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-top">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+            <path d="M2 2l7.586 7.586"/>
+            <circle cx="11" cy="11" r="2"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Tulis Pegon <span class="ar" dir="rtl">توليس فيكون</span></h1>
+          <p>Ketik atau ucapkan tulisan Latin, langsung ditulis ulang dalam aksara Arab Pegon.</p>
+        </div>
+      </div>
+      <div class="hero-side">
+        <span class="badge" id="hijri" title="Kalender Hijriah Ummul Qura"></span>
+        <button type="button" class="role-btn" id="btnRole" title="Ganti peran">
+          <span class="role-pill" id="rolePill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span id="roleName">Pengguna</span>
+          </span>
+          <span id="roleAct">Masuk Admin</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="tabs" aria-label="Menu utama">
+      <a href="#tulis" data-v="tulis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+        <span>Tulis</span>
+      </a>
+      <a href="#kamus" data-v="kamus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        <span>Kamus</span>
+        <span class="n" id="navCount">0</span>
+      </a>
+      <a href="#pedoman" data-v="pedoman" class="admin-only">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Pedoman SOP</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ TULIS ============ -->
+<section class="view" id="view-tulis">
+  <div class="chips-wrap">
+    <span class="chips-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/></svg>
+      Contoh cepat
+    </span>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <div class="card-h">
+        <div class="card-title">
+          <span class="ico-badge sky" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>
+          </span>
+          <h2>Tulisan Latin</h2>
+        </div>
+        <div class="btns">
+          <button class="mic" id="btnMic" title="Ucapkan kalimat, akan ditulis otomatis">
+            <span class="dot"></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            <span id="micLabel">Voice Note</span>
+          </button>
+          <button id="btnE" title="Sisipkan é (e taling)">é</button>
+          <button id="btnClear" title="Hapus semua teks">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            <span>Bersihkan</span>
+          </button>
+        </div>
+      </div>
+      <textarea id="latin" spellcheck="false" placeholder="Contoh: apa yang dimaksud dengan nafkah?"></textarea>
+      <div class="listen" id="listen"><b>● Mendengarkan…</b> <i id="partial"></i></div>
+      <div class="foot">
+        <span>Ketik <kbd>é</kbd> untuk e taling (boléh). Huruf e biasa dibaca pepet.</span>
+        <span class="word-pill" id="count">0 kata</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-h">
+        <div class="card-title">
+          <span class="ico-badge emerald" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+          </span>
+          <h2>Tulisan Pegon</h2>
+        </div>
+        <div class="btns">
+          <button class="primary" id="btnCopy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <span>Salin</span>
+          </button>
+        </div>
+      </div>
+      <div id="out" class="empty" dir="rtl" aria-live="polite"></div>
+      <div class="opts" style="border-top:1px solid var(--line)">
+        <label>Huruf
+          <select id="font">
+            <option value="'Scheherazade New'">Scheherazade</option>
+            <option value="'Noto Naskh Arabic'">Noto Naskh</option>
+            <option value="'Amiri'">Amiri</option>
+          </select>
+        </label>
+        <label>Ukuran
+          <input type="range" id="size" min="20" max="64" value="34">
+          <span class="size-val" id="sizeVal">34px</span>
+        </label>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:18px">
+    <div class="opts">
+      <label><input type="checkbox" id="oDi" checked> Pisah imbuhan di- (dimaksud → دي مقصود)</label>
+      <label><input type="checkbox" id="oRed" checked> Kata ulang pakai ٢</label>
+      <label><input type="checkbox" id="oAngka" checked> Angka Arab (١٢٣)</label>
+      <label><input type="checkbox" id="oTanda" checked> Tanda baca Arab (، ؟ ؛)</label>
+    </div>
+  </section>
+
+  <div class="row2">
+    <section class="card">
+      <div class="card-h">
+        <div class="card-title">
+          <span class="ico-badge cyan" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+          </span>
+          <h2>Rincian per kata</h2>
+        </div>
+        <span class="tag di" id="ruleCount"></span>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Latin</th><th style="text-align:right">Pegon</th><th>Aturan</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="note">Hasil kurang tepat? Tekan <b>Ubah</b> untuk menyimpan bentuk yang benar ke Kamus.</p>
+    </section>
+
+    <div>
+      <section class="card">
+        <div class="card-h">
+          <div class="card-title">
+            <span class="ico-badge emerald" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <h2>Daftar periksa SOP</h2>
+          </div>
+        </div>
+        <ul class="check" id="check"></ul>
+      </section>
+      <section class="card" style="margin-top:18px">
+        <div class="card-h">
+          <div class="card-title">
+            <span class="ico-badge violet" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+            </span>
+            <h2>Kamus</h2>
+          </div>
+          <span class="status" id="kStatus2">Memuat…</span>
+        </div>
+        <div class="ksum">
+          <span><b id="kCount2">0</b> kata di kamus bersama</span>
+          <a class="lnk" href="#kamus" data-v="kamus">Kelola kamus →</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KAMUS ============ -->
+<section class="view" id="view-kamus">
+  <section class="card" style="margin-top:4px">
+    <div class="card-h">
+      <div class="card-title">
+        <span class="ico-badge violet" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        </span>
+        <h2 id="kFormTitle">Tambah kata</h2>
+      </div>
+      <span class="status" id="kStatus">Memuat…</span>
+    </div>
+    <form class="kform" id="kForm" autocomplete="off">
+      <div>
+        <label for="kLatin">Latin</label>
+        <input class="inp" id="kLatin" placeholder="mis. pesantren" required>
+      </div>
+      <div>
+        <label for="kPegon">Pegon</label>
+        <div class="pegon-wrap">
+          <input class="inp ar" id="kPegon" dir="rtl" placeholder="فسانترين" required>
+          <button type="button" id="kAuto" style="white-space:nowrap" title="Isi dengan hasil aturan SOP, lalu perbaiki">Isi otomatis</button>
+        </div>
+      </div>
+      <div class="btns">
+        <button type="submit" class="primary" id="kSave">Simpan</button>
+        <button type="button" id="kCancel" style="display:none">Batal</button>
+      </div>
+    </form>
+    <p class="note" id="kHint">Kamus ini dipakai bersama oleh semua pengguna dan tersimpan di Google Spreadsheet. Kata di kamus dipakai lebih dulu dari semua aturan SOP, termasuk kamus serapan Arab.</p>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="toolbar">
+      <input class="inp" id="kSearch" placeholder="Cari kata Latin atau Pegon…">
+      <span class="tag di" id="kCount">0 kata</span>
+      <span class="sp"></span>
+      <button id="kImpBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        <span>Impor daftar</span>
+      </button>
+      <button id="kExp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        <span>Salin semua</span>
+      </button>
+    </div>
+    <div class="imp" id="kImp">
+      <div style="font-size:13px;color:var(--ink-2)">Tempel daftar, satu kata per baris dengan format <code>latin = pegon</code>. Kata yang sudah ada akan diperbarui.</div>
+      <textarea id="kImpText" spellcheck="false" placeholder="kalimat = كليمة&#10;pesantren = فسانترين"></textarea>
+      <div class="btns"><button class="primary" id="kImpGo">Impor</button><button id="kImpCancel">Tutup</button></div>
+    </div>
+    <div class="scroll" style="max-height:520px">
+      <table class="kamus-list">
+        <thead><tr><th>Latin</th><th style="text-align:right">Pegon</th><th style="text-align:right">Aksi</th></tr></thead>
+        <tbody id="kRows"></tbody>
+      </table>
+    </div>
+  </section>
+</section>
+
+<!-- ============ PEDOMAN ============ -->
+<section class="view" id="view-pedoman">
+  <section class="card" style="margin-top:4px">
+    <div class="card-h">
+      <div class="card-title">
+        <span class="ico-badge sky" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        <h2>Pedoman SOP Penulisan Pegon</h2>
+      </div>
+      <div class="btns">
+        <span class="status" id="pStatus">Memuat…</span>
+        <button id="btnPedEdit">Edit pedoman</button>
+      </div>
+    </div>
+    <form id="pedTools" class="toolbar" style="display:none" autocomplete="off">
+      <span style="font-size:13px;color:var(--muted)">Mode edit: ubah, hapus, atau tambah baris. Perubahan langsung dilihat semua pengguna.</span>
+      <span class="sp"></span>
+      <input class="inp" id="pedGroupName" placeholder="Nama kelompok baru" style="max-width:220px">
+      <button type="submit" class="primary">+ Kelompok baru</button>
+    </form>
+    <div class="guide" id="pedList"></div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="card-h">
+      <div class="card-title">
+        <span class="ico-badge amber" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+        <h2>Aturan huruf yang dipakai saat menulis</h2>
+      </div>
+    </div>
+    <p class="note">Mengubah aturan di sini langsung mengubah hasil tulisan Pegon untuk semua pengguna. Tekan <b>Bawaan</b> untuk kembali ke aturan SOP. Untuk satu kata saja, cukup pakai menu Kamus.</p>
+    <div class="guide" style="padding-top:4px">
+      <div><h3>Konsonan</h3><table><tbody id="atKons"></tbody></table></div>
+      <div>
+        <h3>Vokal di akhir kata</h3>
+        <table><tbody id="atAkhir"></tbody></table>
+        <p class="note" style="padding:10px 0 0">Kosongkan untuk memakai aturan biasa. Contoh SOP: <b>e di akhir kata → <span class="ar">ى</span></b> (oke → <span class="ar">اوكى</span>).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="card-h">
+      <div class="card-title">
+        <span class="ico-badge violet" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </span>
+        <h2>Ganti sandi admin</h2>
+      </div>
+    </div>
+    <form class="pw-grid" id="fPass" autocomplete="off">
+      <div><label for="pwOld">Sandi lama</label><input class="inp" type="password" id="pwOld" required></div>
+      <div><label for="pwNew">Sandi baru</label><input class="inp" type="password" id="pwNew" minlength="6" required></div>
+      <div><label for="pwNew2">Ulangi sandi baru</label><input class="inp" type="password" id="pwNew2" minlength="6" required></div>
+      <div class="btns"><button type="submit" class="primary" id="pwSave">Simpan sandi</button></div>
+    </form>
+    <p class="note" style="padding-top:0">Sandi berlaku untuk semua admin. Bagikan hanya kepada orang yang boleh mengubah Pedoman SOP.</p>
+  </section>
+</section>
+</main>
+<div class="modal" id="mLogin" hidden>
+  <form class="modal-card" id="fLogin" autocomplete="off">
+    <h3>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Masuk sebagai Admin
+    </h3>
+    <p>Admin bisa membuka menu Pedoman SOP dan mengubah aturan penulisan.</p>
+    <input class="inp" type="password" id="loginPass" placeholder="Sandi admin" required>
+    <p class="err" id="loginErr"></p>
+    <div class="btns">
+      <button type="button" id="loginCancel">Batal</button>
+      <button type="submit" class="primary" id="loginGo">Masuk</button>
+    </div>
+  </form>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* Mesin alih aksara Latin -> Pegon, mengikuti "SOP Penulisan Pegon" (15 Nov 2026) */
+var PegonEngine = (function () {
+  var VOWELS = { a: 'a', i: 'i', u: 'u', o: 'o', e: 'e', 'é': 'é', 'è': 'é', 'ê': 'e', 'ě': 'e', 'â': 'a', 'î': 'i', 'û': 'u', 'ô': 'o' };
+
+  // Bagian 2: konsonan memakai huruf Arab biasa (tanpa ڤ ڬ ݢ ڠ چ ڽ)
+  var CONS = {
+    b: 'ب', c: 'ج', d: 'د', f: 'ف', g: 'ك', h: 'ه', j: 'ج', k: 'ك', l: 'ل', m: 'م', n: 'ن',
+    p: 'ف', q: 'ق', r: 'ر', s: 'س', t: 'ت', v: 'ف', w: 'و', x: 'كس', y: 'ي', z: 'ز',
+    ng: 'غ', ny: 'ي', sy: 'ش', sh: 'ش', kh: 'خ', dz: 'ذ', gh: 'غ', th: 'ث', dh: 'ض',
+    "'": 'ء', 'ʼ': 'ء', '’': 'ء', '`': 'ع', '‘': 'ع'
+  };
+  // Vokal di akhir kata (setelah konsonan). Kosong = aturan biasa.
+  var AKHIR = { e: 'ى' }; // SOP tambahan: oke -> اوكى
+  var KONSONAN_LIST = ['b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z','ng','ny','sy','kh','dz','gh','th','dh'];
+  var DIGRAPHS = ['ng', 'ny', 'sy', 'sh', 'kh', 'dh', 'th', 'dz', 'gh'];
+
+  // Bagian 5: kata serapan Arab ditulis dengan ejaan Arab aslinya
+  var ARAB = {
+    // dari SOP
+    'sehat': 'صحة', 'nikah': 'نكاح', 'nafkah': 'نفقة', 'fikih': 'فقه', 'fiqih': 'فقه', 'hukum': 'حكم',
+    'hibah': 'هبة', 'taat': 'طاعة', 'saat': 'ساعة', 'hamil': 'حامل', 'dunia': 'دنيا', 'ilmu': 'علم',
+    'miskin': 'مسكين', 'izin': 'إذن', 'jumlah': 'جملة', 'wajib': 'واجب', 'hakim': 'حاكم', 'kadar': 'قدر',
+    'sah': 'صح', 'mutlak': 'مطلق', 'talak': 'طلاق', 'maksud': 'مقصود', 'waktu': 'وقتو', 'lazim': 'لازم',
+    // tambahan umum
+    'allah': 'الله', 'bismillah': 'بسم الله', 'alhamdulillah': 'الحمد لله',
+    'assalamualaikum': 'السلام عليكم', "assalamu'alaikum": 'السلام عليكم',
+    'waalaikumsalam': 'وعليكم السلام', "wa'alaikumsalam": 'وعليكم السلام',
+    'insyaallah': 'إن شاء الله', 'masyaallah': 'ما شاء الله', 'subhanallah': 'سبحان الله',
+    'astaghfirullah': 'أستغفر الله', 'allahuakbar': 'الله أكبر',
+    'muhammad': 'محمد', 'rasulullah': 'رسول الله', 'nabi': 'نبي', 'rasul': 'رسول',
+    'quran': 'قرآن', 'alquran': 'القرآن', 'al-quran': 'القرآن', "al-qur'an": 'القرآن', "qur'an": 'قرآن',
+    'islam': 'إسلام', 'iman': 'إيمان', 'ihsan': 'إحسان', 'salat': 'صلاة', 'shalat': 'صلاة', 'sholat': 'صلاة',
+    'zakat': 'زكاة', 'masjid': 'مسجد', 'doa': 'دعاء', "do'a": 'دعاء', 'kitab': 'كتاب',
+    'jumat': 'جمعة', "jum'at": 'جمعة', 'ramadan': 'رمضان', 'ramadhan': 'رمضان',
+    'amin': 'آمين', 'aamiin': 'آمين', 'akhirat': 'آخرة', 'rahmat': 'رحمة', 'sunah': 'سنة', 'sunnah': 'سنة',
+    'umat': 'أمة', 'hadis': 'حديث', 'hadits': 'حديث', 'tauhid': 'توحيد', 'syariat': 'شريعة',
+    'syarat': 'شرط', 'akad': 'عقد', 'mahar': 'مهر', 'wali': 'ولي', 'idah': 'عدة', 'iddah': 'عدة',
+    'rujuk': 'رجوع', 'halal': 'حلال', 'haram': 'حرام', 'makruh': 'مكروه', 'mubah': 'مباح',
+    'fardu': 'فرض', 'fardhu': 'فرض', 'najis': 'نجس', 'wudu': 'وضوء', 'wudhu': 'وضوء',
+    'ibadah': 'عبادة', 'adil': 'عادل', 'khulu': 'خلع', 'fasakh': 'فسخ', 'nusyuz': 'نشوز', 'zina': 'زنا'
+  };
+
+  // Kata Indonesia dengan bentuk baku khusus
+  var KHUSUS = { 'tua': 'تووا' };
+
+  // E taling (é) pada kata umum; e lain dianggap pepet. Pengguna juga bisa mengetik é.
+  var TALING = {
+    boleh: 'boléh', kakek: 'kakék', oke: 'oké', nenek: 'nénék', enak: 'énak', ekor: 'ékor', merah: 'mérah',
+    pendek: 'pendék', bebek: 'bébék', sate: 'saté', tempe: 'tempé', kecewa: 'kecéwa', monyet: 'monyét',
+    desa: 'désa', heran: 'héran', lele: 'lélé', becak: 'bécak', meja: 'méja', sore: 'soré', dewa: 'déwa',
+    dewasa: 'déwasa', negara: 'négara', ekonomi: 'ékonomi', elok: 'élok', beres: 'bérés', teh: 'téh',
+    es: 'és', lewat: 'léwat', remeh: 'réméh', hebat: 'hébat', keren: 'kerén', obeng: 'obéng',
+    setan: 'sétan', senin: 'sénin', tokek: 'tokék', cerewet: 'cerewét', kare: 'karé',
+    toge: 'togé', gede: 'gedé', bareng: 'baréng', mepet: 'mépét', serek: 'sérék', pesek: 'pések',
+    peta: 'péta', perak: 'pérak', bendera: 'bendéra', karet: 'karét', kaleng: 'kaléng', sepeda: 'sepéda',
+    mesin: 'mésin', resep: 'resép', bebas: 'bébas', petak: 'pétak'
+  };
+
+  // Kata yang memang diawali "di" (tidak dipisah)
+  var DI_ASLI = ['di', 'dia', 'diam', 'dian', 'diri', 'dingin', 'dinas', 'dinding', 'dini', 'didik', 'dikit',
+    'dinar', 'diskusi', 'disiplin', 'dimensi', 'digital', 'diet', 'dirham', 'dikte', 'dilema', 'dinamis',
+    'dinasti', 'diploma', 'diplomat', 'direktur', 'distrik', 'divisi', 'diagram', 'dialog', 'dialek',
+    'diare', 'diesel', 'dirgahayu', 'diskon', 'dinamika', 'dingklik', 'dipan', 'dirut', 'disko', 'dina'];
+
+  // Kata dasar berawalan vokal: setelah awalan ber-/ter-/per- vokalnya tetap berdiri sendiri (berakhir -> برأخير)
+  var DASAR_VOKAL = ['akhir', 'ada', 'arti', 'asal', 'atas', 'awal', 'ajar', 'aman', 'antar', 'alih', 'angkat',
+    'anak', 'air', 'arah', 'atur', 'usaha', 'ubah', 'ulang', 'umur', 'untung', 'ingat', 'isi', 'ikut', 'olahraga', 'obat', 'oleh', 'operasi', 'isteri', 'istri', 'iman', 'ilmu', 'ibadah', 'akal', 'asa', 'agama', 'aku', 'adu', 'api', 'ekor', 'emas', 'awak', 'ombak', 'orang'];
+
+  var SUFIKS = ['nya', 'kan', 'lah', 'an', 'ku', 'mu', 'i'];
+  var SUF_TULIS = { nya: 'يا', kan: 'كان', lah: 'لاه', an: 'ان', ku: 'كو', mu: 'مو', i: 'ي' };
+  var PREFIKS = ['meng', 'peng', 'mem', 'men', 'pen', 'per', 'ber', 'ter', 'me', 'pe', 'ke', 'se', 'di'];
+  var PRE_TULIS = { meng: 'مغ', peng: 'فغ', mem: 'مم', men: 'من', pen: 'فن', per: 'فر', ber: 'بر', ter: 'تر',
+    me: 'م', pe: 'ف', ke: 'ك', se: 'س', di: 'دي ' };
+
+  function findAffixed(w, table, opt) {
+    opt = opt || {};
+    var best = null;
+    var pres = opt.noPrefix ? [''] : [''].concat(PREFIKS);
+    var sufs = [''].concat(SUFIKS);
+    pres.forEach(function (p) {
+      if (w.indexOf(p) !== 0) return;
+      sufs.forEach(function (s) {
+        if (s && w.slice(-s.length) !== s) return;
+        var root = w.slice(p.length, w.length - s.length);
+        if (!root || table[root] === undefined) return;
+        if (p && p !== 'di' && root.length < 4) return;
+        if (!best || root.length > best.root.length) best = { pre: p, root: root, suf: s };
+      });
+    });
+    return best;
+  }
+
+  function withSuffix(base, suf, isArab) {
+    if (!suf) return base;
+    if (isArab && /ة$/.test(base)) base = base.slice(0, -1) + (suf === 'nya' || suf === 'ku' || suf === 'mu' ? 'ه' : 'ت');
+    if (suf === 'nya' && /ي$/.test(base)) return base + 'ا';
+    return base + SUF_TULIS[suf];
+  }
+
+  function tokenize(word) {
+    var out = [], i = 0;
+    while (i < word.length) {
+      var two = word.substr(i, 2), ch = word[i];
+      if (DIGRAPHS.indexOf(two) >= 0) { out.push({ t: 'C', v: two }); i += 2; continue; }
+      if (VOWELS[ch]) { out.push({ t: 'V', v: VOWELS[ch] }); i++; continue; }
+      out.push({ t: 'C', v: ch }); i++;
+    }
+    var merged = [];
+    out.forEach(function (tk) {
+      var prev = merged[merged.length - 1];
+      if (prev && tk.t === 'C' && prev.t === 'C' && prev.v === tk.v && CONS[tk.v] !== 'ء' && CONS[tk.v] !== 'ع') return;
+      merged.push(tk);
+    });
+    return merged;
+  }
+
+  // Bagian 3 & 4: tulis per suku kata
+  function spell(w, o) {
+    var CM = (o && o.hurufMap) || CONS, AM = (o && o.akhirMap) || AKHIR;
+    var tk = tokenize(w), s = '';
+    for (var i = 0; i < tk.length; i++) {
+      var cur = tk[i], prev = tk[i - 1], next = tk[i + 1], next2 = tk[i + 2];
+      var closed = next && next.t === 'C' && (!next2 || next2.t === 'C');
+      if (cur.t === 'C') {
+        if (cur.v === 'ny' && prev && prev.t === 'V' && (prev.v === 'i' || prev.v === 'é') && next && next.v === 'a' && !next2 && i >= 2) continue;
+        s += CM[cur.v] !== undefined ? CM[cur.v] : cur.v;
+        continue;
+      }
+      var v = cur.v;
+      if (!prev) {
+        s += { a: 'أ', i: 'اي', u: 'او', o: 'او', 'é': 'اي', e: 'ا' }[v];
+        continue;
+      }
+      if (prev.t === 'V') {
+        var pv = prev.v;
+        if (v === 'a') {
+          if (pv === 'i' || pv === 'é') s += 'يا';
+          else if (pv === 'u') s += 'ا';
+          else if (pv === 'a' && closed) s += 'ئا';
+          else s += 'أ';
+        } else if (v === 'i' || v === 'é') s += closed ? 'ئ' : 'ي';
+        else if (v === 'u' || v === 'o') s += closed ? 'ؤ' : 'و';
+        else if (v === 'e') s += 'ء';
+        continue;
+      }
+      var ak = v === 'é' ? 'e' : v;
+      if (!next && AM[ak]) { s += AM[ak]; continue; }
+      if (v === 'a') s += 'ا';
+      else if (v === 'i' || v === 'é') s += 'ي';
+      else if (v === 'u' || v === 'o') s += 'و';
+    }
+    return s;
+  }
+
+  function convertWord(raw, o, depth) {
+    var w = raw.toLowerCase();
+    o = o || {};
+    var ud = o.userDict || {};
+    if (ud[w] !== undefined) return { p: ud[w], r: 'Kamus' };
+    if (w === 'di') return { p: 'دي', r: 'Kata depan di' };
+    if (w === 'ke') return { p: 'ك', r: 'Kata depan ke' };
+    if (ARAB[w] !== undefined) return { p: ARAB[w], r: 'Serapan Arab' };
+    var a = findAffixed(w, ARAB);
+    if (a) return { p: (PRE_TULIS[a.pre] || '') + withSuffix(ARAB[a.root], a.suf, true), r: 'Serapan Arab' + (a.pre || a.suf ? ' + imbuhan' : '') };
+    var k = findAffixed(w, KHUSUS);
+    if (k) return { p: (PRE_TULIS[k.pre] || '') + withSuffix(KHUSUS[k.root], k.suf, false), r: 'Bentuk baku' };
+    if (o.pisahDi !== false && w.length > 3 && w.indexOf('di') === 0 && !(depth > 0)) {
+      var asli = DI_ASLI.some(function (r) { return w === r || SUFIKS.some(function (s) { return w === r + s; }); });
+      if (!asli) {
+        var rest = convertWord(w.slice(2), o, 1);
+        return { p: 'دي ' + rest.p, r: 'Imbuhan di- dipisah' };
+      }
+    }
+    var pm = /^(ber|ter|per)(.+)$/.exec(w);
+    if (pm) {
+      var dv = findAffixed(pm[2], DASAR_VOKAL.reduce(function (m, x) { m[x] = 1; return m; }, {}), { noPrefix: true });
+      if (dv) { var sub = convertWord(pm[2], o, 1); return { p: PRE_TULIS[pm[1]] + sub.p, r: 'Awalan ' + pm[1] + '- + vokal berdiri sendiri' }; }
+    }
+    var t = findAffixed(w, TALING, { noPrefix: true });
+    if (t) w = TALING[t.root] + t.suf;
+    return { p: spell(w, o), r: w.indexOf('é') >= 0 ? 'Ejaan (e taling)' : 'Ejaan' };
+  }
+
+  var EAST = '٠١٢٣٤٥٦٧٨٩';
+  var PUNCT = { ',': '،', '?': '؟', ';': '؛', '%': '٪' };
+  var L = "a-zA-ZéèêěâîûôÉÈÊĚÂÎÛÔ";
+  var AP = "['`ʼ’‘]";
+  var WORD_RE = new RegExp("[" + L + "]+(?:" + AP + "[" + L + "]+)*(?:-[" + L + "]+(?:" + AP + "[" + L + "]+)*)*", 'g');
+
+  function convertToken(m, o, log) {
+    var lw = m.toLowerCase();
+    var ud = o.userDict || {};
+    var res;
+    if (ud[lw] !== undefined) res = { p: ud[lw], r: 'Kamus' };
+    else if (ARAB[lw] !== undefined) res = { p: ARAB[lw], r: 'Serapan Arab' };
+    else {
+      var parts = m.split('-');
+      if (o.reduplikasi && parts.length === 2 && parts[0].toLowerCase() === parts[1].toLowerCase()) {
+        var r1 = convertWord(parts[0], o);
+        res = { p: r1.p + '٢', r: r1.r + ' + ulang (٢)' };
+      } else {
+        var rs = parts.map(function (p) { return convertWord(p, o); });
+        res = { p: rs.map(function (x) { return x.p; }).join('-'), r: rs.map(function (x) { return x.r; }).join(' / ') };
+      }
+    }
+    if (log) log.push({ latin: m, pegon: res.p, rule: res.r });
+    return res.p;
+  }
+
+  function transliterate(text, opts, log) {
+    var o = Object.assign({ reduplikasi: true, angka: true, tandaBaca: true, pisahDi: true, userDict: {}, huruf: {}, akhir: {} }, opts || {});
+    o.hurufMap = Object.assign({}, CONS, o.huruf);
+    o.akhirMap = Object.assign({}, AKHIR, o.akhir);
+    var out = text.replace(WORD_RE, function (m) { return convertToken(m, o, log); });
+    if (o.tandaBaca) out = out.replace(/[,?;%]/g, function (c) { return PUNCT[c]; });
+    if (o.angka) out = out.replace(/[0-9]/g, function (d) { return EAST[+d]; });
+    return out;
+  }
+
+  var FORBIDDEN = /[ڤڬݢڠچڽۑڮ]/;
+  return { transliterate: transliterate, ARAB: ARAB, FORBIDDEN: FORBIDDEN, CONS: CONS, AKHIR: AKHIR, KONSONAN_LIST: KONSONAN_LIST };
+})();
+</script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var store = { get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+                set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.h); toast.h=setTimeout(function(){t.classList.remove('show');},2300); }
+
+  /* ================= Data bersama: Kamus, Pedoman, Aturan (Google Spreadsheet lewat Apps Script) ================= */
+  // Alamat server diatur di window.PEGON_CONFIG (bagian atas <head>)
+  var API_URL = String((window.PEGON_CONFIG && window.PEGON_CONFIG.API_URL) || '').trim();
+  var SERVER = /^https:\/\/script\.google(usercontent)?\.com\//.test(API_URL);
+  var PEDOMAN_AWAL = [["Konsonan khas Indonesia", "p", "ف", "pakaian → فاكاييان"], ["Konsonan khas Indonesia", "g", "ك", "bagi → باكي"], ["Konsonan khas Indonesia", "ng", "غ", "yang → ياغ"], ["Konsonan khas Indonesia", "c", "ج", "mencari → منجاري"], ["Konsonan khas Indonesia", "ny", "ي", "hanya → هايا"], ["Konsonan khas Indonesia", "k", "ك", "anak → أناك"], ["Vokal A", "Setelah konsonan", "ا", "dalam → دالام"], ["Vokal A", "Awal kata", "أ", "akan → أكان"], ["Vokal A", "Setelah A/E/O", "أ", "berakhir → برأخير"], ["Vokal A", "AN setelah A", "ئا", "keadaan → كأدائان"], ["Vokal A", "Setelah U", "ا", "dua → دوا"], ["Vokal A", "Setelah I", "يا", "biasa → بيياسا"], ["Vokal lain", "I, é", "ي", "lebih → لبيه"], ["Vokal lain", "U, O", "و", "orang → اوراغ"], ["Vokal lain", "E pepet", "—", "tempat → تمفات"], ["Vokal lain", "I bertemu sukun", "ئ", "bain → بائن"], ["Vokal lain", "Awal kata", "اي / او", "ibu → ايبو"], ["Vokal lain", "E di akhir kata", "ى", "oke → اوكى"], ["Imbuhan & serapan Arab", "di- dipisah", "دي …", "ditalak → دي طلاق"], ["Imbuhan & serapan Arab", "-nya", "يا", "hartanya → هارتايا"], ["Imbuhan & serapan Arab", "Arab + -nya", "ه + يا", "nafkahnya → نفقهيا"], ["Imbuhan & serapan Arab", "Serapan Arab", "ejaan asli", "sehat → صحة"]];
+
+  var Lokal = {
+    st: null,
+    state: function(){
+      if (this.st) return this.st;
+      var s = null; try { s = JSON.parse(store.get('pegon-uji') || 'null'); } catch(e){}
+      if (!s) s = { kamus: [], aturan: [], pedoman: PEDOMAN_AWAL.map(function(p, i){ return { id: 'p' + i, kelompok: p[0], bunyi: p[1], huruf: p[2], contoh: p[3] }; }) };
+      return (this.st = s);
+    },
+    out: function(){ store.set('pegon-uji', JSON.stringify(this.st)); return JSON.parse(JSON.stringify(this.st)); },
+    getData: function(){ this.state(); return this.out(); },
+    simpanKata: function(l, p, old){ var s = this.state(); s.kamus = s.kamus.filter(function(x){ return x.latin !== l && x.latin !== old; }); s.kamus.push({ latin: l, pegon: p }); return this.out(); },
+    hapusKata: function(l){ var s = this.state(); s.kamus = s.kamus.filter(function(x){ return x.latin !== l; }); return this.out(); },
+    imporKata: function(ps){ var self = this; ps.forEach(function(p){ self.simpanKata(p[0], p[1]); }); return this.out(); },
+    sandi: function(){ return store.get('pegon-uji-sandi') || 'pegon123'; },
+    loginAdmin: function(p){ if (p !== this.sandi()) throw new Error('Sandi admin salah.'); var t = 'uji-' + Date.now(); store.set('pegon-uji-token', t); return t; },
+    cekAdmin: function(t){ return !!t && t === store.get('pegon-uji-token'); },
+    logoutAdmin: function(){ store.set('pegon-uji-token', ''); return true; },
+    gantiSandi: function(t, lama, baru){ if (!this.cekAdmin(t)) throw new Error('Sesi admin berakhir. Silakan masuk lagi.');
+      if (lama !== this.sandi()) throw new Error('Sandi lama salah.'); if (String(baru).length < 6) throw new Error('Sandi baru minimal 6 huruf.');
+      store.set('pegon-uji-sandi', baru); return true; },
+    wajib: function(t){ if (!this.cekAdmin(t)) throw new Error('Sesi admin berakhir. Silakan masuk lagi.'); },
+    simpanPedoman: function(t, r){ this.wajib(t); var s = this.state(); var f = s.pedoman.filter(function(x){ return x.id === r.id; })[0];
+      if (f) Object.assign(f, r); else s.pedoman.push(Object.assign({}, r, { id: 'p' + Date.now() })); return this.out(); },
+    hapusPedoman: function(t, id){ this.wajib(t); var s = this.state(); s.pedoman = s.pedoman.filter(function(x){ return x.id !== id; }); return this.out(); },
+    simpanAturan: function(t, j, l, p){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); s.aturan.push({ jenis: j, latin: l, pegon: p }); return this.out(); },
+    hapusAturan: function(t, j, l){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); return this.out(); }
+  };
+
+  function call(fn, args){
+    if (!SERVER) {
+      return new Promise(function(resolve, reject){
+        try { resolve(Lokal[fn].apply(Lokal, args || [])); } catch(e){ reject(e); }
+      });
+    }
+    // text/plain supaya browser tidak mengirim permintaan CORS tambahan ke Apps Script
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ fn: fn, args: args || [] }),
+      redirect: 'follow'
+    }).then(function(res){
+      if (!res.ok) throw new Error('Server menjawab ' + res.status);
+      return res.json();
+    }, function(){
+      throw new Error('Tidak bisa terhubung ke server. Periksa internet Anda.');
+    }).then(function(j){
+      if (!j || j.ok !== true) throw new Error((j && j.error) || 'Jawaban server tidak dikenali');
+      return j.data;
+    });
+  }
+
+  var Data = {
+    pedoman: [], aturan: { konsonan: {}, akhir: {} }, busy: 0, loaded: false, ver: 0,
+    apply: function(d){
+      d = d || {};
+      var dict = {};
+      (d.kamus || []).forEach(function(x){ if (x && x.latin && x.pegon) dict[String(x.latin).toLowerCase()] = String(x.pegon); });
+      Kamus.dict = dict;
+      this.pedoman = d.pedoman || [];
+      var at = { konsonan: {}, akhir: {} };
+      (d.aturan || []).forEach(function(x){ if (at[x.jenis]) at[x.jenis][String(x.latin).toLowerCase()] = String(x.pegon || ''); });
+      this.aturan = at; this.loaded = true;
+      refreshAll();
+    },
+    okStatus: function(){ setStatus(SERVER ? 'online' : 'warn', SERVER ? '☁ Data bersama · Google Spreadsheet' : 'Mode uji · API_URL belum diisi'); },
+    load: function(silent){
+      var self = this;
+      if (this.busy) return Promise.resolve();
+      if (!silent) setStatus('', 'Memuat data…');
+      var v = this.ver;
+      return call('getData').then(function(d){ if (v !== self.ver || self.busy) return; self.apply(d); self.okStatus(); },
+        function(err){ setStatus('warn', 'Data belum termuat'); if (!silent) toast((err && err.message) || 'Data belum termuat, coba muat ulang halaman'); });
+    },
+    run: function(fn, args, okMsg){
+      var self = this; this.busy++; this.ver++;
+      setStatus('', 'Menyimpan…');
+      return call(fn, args).then(function(d){
+        self.busy--; self.apply(d); self.okStatus();
+        if (okMsg) toast(okMsg);
+      }, function(err){
+        self.busy--;
+        setStatus('warn', 'Gagal menyimpan');
+        toast('Gagal menyimpan: ' + (err && err.message ? err.message : 'periksa koneksi lalu coba lagi'));
+        throw err;
+      });
+    },
+    // perubahan khusus admin: kirim token sesi, keluar otomatis bila sesi berakhir
+    adminRun: function(fn, args, okMsg){
+      if (!Role.admin) { toast('Fitur ini khusus Admin'); return Promise.reject(new Error('bukan admin')); }
+      return this.run(fn, [Role.token].concat(args || []), okMsg).catch(function(err){
+        if (err && /Sesi admin/.test(err.message || '')) Role.set(false, '');
+        throw err;
+      });
+    },
+    connect: function(){
+      var self = this;
+      this.load();
+      setInterval(function(){ if (!document.hidden) self.load(true); }, 30000);
+      document.addEventListener('visibilitychange', function(){ if (!document.hidden) self.load(true); });
+    }
+  };
+
+  var Kamus = {
+    dict: {},
+    parse: function(text){
+      var d = {};
+      (text || '').split('\n').forEach(function(line){
+        var i = line.indexOf('=');
+        if (i > 0) { var k = line.slice(0,i).trim().toLowerCase(), v = line.slice(i+1).trim(); if (k && v) d[k] = v; }
+      });
+      return d;
+    },
+    toText: function(d){ return Object.keys(d).sort().map(function(k){ return k + ' = ' + d[k]; }).join('\n'); },
+    save: function(latin, pegon, oldLatin){
+      var k = latin.trim().toLowerCase(), v = pegon.trim();
+      if (!k || !v) return Promise.resolve();
+      return Data.run('simpanKata', [k, v, oldLatin || '']);
+    },
+    remove: function(latin){ return Data.run('hapusKata', [latin.toLowerCase()]); },
+    importMany: function(d){ return Data.run('imporKata', [Object.keys(d).map(function(k){ return [k, d[k]]; })]); },
+    connect: function(){ Data.connect(); }
+  };
+  function setStatus(cls, text){
+    ['kStatus','kStatus2','pStatus'].forEach(function(id){ var el = $(id); if (!el) return; el.className = 'status ' + cls; el.textContent = text; });
+  }
+
+  /* ================= Tulis ================= */
+  var EXAMPLES = [
+    'apa yang dimaksud nafkah?',
+    'Suami wajib memberikan nafkah kepada istrinya.',
+    'Dalam keadaan hamil, istri yang ditalak bain tetap berhak atas tempat tinggal.',
+    'Orang tuanya mencari nafkah dengan sehat secara fisik.',
+    'Kebiasaan anak-anak di pondok pesantren.'
+  ];
+  EXAMPLES.forEach(function(t){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = t.length > 34 ? t.slice(0,32) + '…' : t;
+    b.title = t;
+    b.addEventListener('click', function(){ $('latin').value = t; run(); });
+    $('chips').appendChild(b);
+  });
+  var PLACEHOLDER = PegonEngine.transliterate('hasil akan muncul di sini');
+
+  function tagClass(r){
+    if (/Kamus/.test(r)) return 'own';
+    if (/Arab/.test(r)) return 'arab';
+    if (/di-|Kata depan/.test(r)) return 'di';
+    return '';
+  }
+  function opts(extra){
+    return Object.assign({ pisahDi: $('oDi').checked, reduplikasi: $('oRed').checked,
+      angka: $('oAngka').checked, tandaBaca: $('oTanda').checked, userDict: Kamus.dict,
+      huruf: Data.aturan.konsonan, akhir: Data.aturan.akhir }, extra || {});
+  }
+
+  function run(){
+    var text = $('latin').value;
+    store.set('pegon-text', text);
+    var log = [];
+    var out = PegonEngine.transliterate(text, opts(), log);
+    var o = $('out');
+    if (text.trim()) { o.textContent = out; o.classList.remove('empty'); }
+    else { o.textContent = PLACEHOLDER; o.classList.add('empty'); }
+    $('count').textContent = log.length + ' kata';
+
+    var seen = {}, rows = [];
+    log.forEach(function(x){
+      var key = x.latin.toLowerCase(); if (seen[key]) return; seen[key] = 1;
+      rows.push('<tr><td>'+esc(x.latin)+'</td><td class="ar">'+esc(x.pegon)+'</td><td><span class="tag '+tagClass(x.rule)+'">'+esc(x.rule)+'</span></td>'+
+        '<td><button type="button" data-w="'+esc(key)+'" data-p="'+esc(x.pegon)+'" class="edit">Ubah</button></td></tr>');
+    });
+    $('rows').innerHTML = rows.length ? rows.join('') : '<tr class="empty-row"><td colspan="4">Belum ada teks.</td></tr>';
+    var nArab = log.filter(function(x){ return /Arab/.test(x.rule); }).length;
+    $('ruleCount').textContent = rows.length ? (rows.length + ' kata unik · ' + nArab + ' serapan Arab') : '0 kata';
+
+    var items = [];
+    var forb = out.match(/[ڤڬݢڠچڽۑڮ]/g);
+    items.push([!forb, 'Tidak ada huruf ڤ ڬ ݢ ڠ چ ڽ' + (forb ? ' — ditemukan: ' + forb.join(' ') : '')]);
+    var qIndo = log.filter(function(x){ return !/Arab|Kamus/.test(x.rule) && /ق/.test(x.pegon); });
+    items.push([!qIndo.length, 'Tidak ada ق untuk bunyi K pada kata Indonesia' + (qIndo.length ? ' — periksa: ' + qIndo.map(function(x){return x.latin;}).join(', ') : '')]);
+    var zS = log.filter(function(x){ return !/Arab|Kamus/.test(x.rule) && /ز/.test(x.pegon) && !/z/i.test(x.latin); });
+    items.push([!zS.length, 'Tidak ada ز untuk bunyi S']);
+    items.push([true, 'Setiap A punya huruf (ا / أ / ئا)']);
+    items.push([$('oDi').checked, 'Imbuhan di- terpisah (دي …)' + ($('oDi').checked ? '' : ' — opsi sedang dimatikan')]);
+    items.push([true, 'Kata serapan Arab memakai huruf aslinya (' + Object.keys(PegonEngine.ARAB).length + ' kata dalam kamus bawaan)']);
+    $('check').innerHTML = items.map(function(i){ return '<li><span class="'+(i[0]?'ok':'bad')+'">'+(i[0]?'✓':'✗')+'</span><span>'+esc(i[1])+'</span></li>'; }).join('');
+  }
+
+  $('rows').addEventListener('click', function(e){
+    var b = e.target.closest('.edit'); if (!b) return;
+    var td = b.closest('tr').children[1];
+    if (b.textContent === 'Ubah') {
+      td.innerHTML = '<input class="inp ar" dir="rtl" style="font-size:22px" value="'+esc(b.dataset.p)+'">';
+      td.firstChild.focus(); b.textContent = 'Simpan';
+      b.classList.add('primary');
+      td.firstChild.addEventListener('keydown', function(ev){ if (ev.key === 'Enter') b.click(); });
+    } else {
+      var v = td.firstChild.value.trim(); if (!v) return;
+      Kamus.save(b.dataset.w, v).then(function(){ toast('“' + b.dataset.w + '” disimpan ke Kamus'); run(); });
+    }
+  });
+
+  $('btnCopy').addEventListener('click', function(){
+    var txt = $('out').classList.contains('empty') ? '' : $('out').textContent;
+    if (!txt) { toast('Belum ada teks untuk disalin'); return; }
+    copyText(txt, 'Tulisan Pegon disalin', $('out'));
+  });
+  function copyText(txt, okMsg, selectEl){
+    function fallback(){
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        var copied = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (copied) { toast(okMsg); return; }
+      } catch(err){}
+      if (selectEl) { var r = document.createRange(); r.selectNodeContents(selectEl); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+      toast('Teks sudah ditandai — tekan Ctrl+C / Salin');
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function(){ toast(okMsg); }, fallback);
+      } else { fallback(); }
+    } catch(e){ fallback(); }
+  }
+  $('btnClear').addEventListener('click', function(){ $('latin').value=''; run(); $('latin').focus(); });
+  $('btnE').addEventListener('click', function(){
+    var ta=$('latin'), s=ta.selectionStart, e=ta.selectionEnd;
+    ta.value = ta.value.slice(0,s)+'é'+ta.value.slice(e); ta.selectionStart=ta.selectionEnd=s+1; ta.focus(); run();
+  });
+  ['oDi','oRed','oAngka','oTanda'].forEach(function(id){ $(id).addEventListener('change', run); });
+  $('latin').addEventListener('input', run);
+  $('font').addEventListener('change', function(){ $('out').style.fontFamily = this.value + ', serif'; });
+  $('size').addEventListener('input', function(){
+    $('out').style.fontSize = this.value + 'px';
+    if ($('sizeVal')) $('sizeVal').textContent = this.value + 'px';
+  });
+
+  /* ================= Voice Note (pengenalan suara browser) ================= */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var rec = null, listening = false;
+  if (SR) $('btnMic').classList.add('ready');
+  function micUi(on){
+    listening = on;
+    $('btnMic').classList.toggle('live', on);
+    $('micLabel').textContent = on ? 'Berhenti' : 'Voice Note';
+    $('listen').classList.toggle('on', on);
+    if (!on) $('partial').textContent = '';
+  }
+  $('btnMic').addEventListener('click', function(){
+    if (!SR) return;
+    if (listening && rec) { rec.stop(); return; }
+    rec = new SR();
+    rec.lang = 'id-ID'; rec.continuous = true; rec.interimResults = true;
+    rec.onresult = function(ev){
+      var finalText = '', interim = '';
+      for (var i = ev.resultIndex; i < ev.results.length; i++) {
+        if (ev.results[i].isFinal) finalText += ev.results[i][0].transcript;
+        else interim += ev.results[i][0].transcript;
+      }
+      if (finalText) {
+        var ta = $('latin');
+        ta.value = (ta.value.trim() ? ta.value.replace(/\s*$/, ' ') : '') + finalText.trim();
+        run();
+      }
+      $('partial').textContent = interim;
+    };
+    rec.onerror = function(ev){
+      if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'audio-capture') {
+        toast('Izin mikrofon ditolak. Izinkan mikrofon untuk situs ini di pengaturan browser, atau pakai tombol mikrofon pada keyboard HP.');
+      } else if (ev.error === 'network') {
+        toast('Voice Note butuh koneksi internet yang stabil');
+      } else if (ev.error !== 'no-speech' && ev.error !== 'aborted') {
+        toast('Voice Note berhenti: ' + ev.error);
+      }
+    };
+    rec.onend = function(){ micUi(false); };
+    try { rec.start(); micUi(true); }
+    catch(e){ toast('Voice Note tidak bisa dimulai di browser ini'); micUi(false); }
+  });
+
+  /* ================= Halaman Kamus ================= */
+  var editing = null, confirmDel = null;
+  function renderKamus(){
+    var keys = Object.keys(Kamus.dict).sort();
+    $('navCount').textContent = keys.length;
+    $('kCount2').textContent = keys.length;
+    var q = $('kSearch').value.trim().toLowerCase();
+    var shown = keys.filter(function(k){ return !q || k.indexOf(q) >= 0 || Kamus.dict[k].indexOf(q) >= 0; });
+    $('kCount').textContent = (q ? shown.length + ' dari ' : '') + keys.length + ' kata';
+    if (!keys.length) { $('kRows').innerHTML = '<tr class="empty-row"><td colspan="3">Kamus masih kosong. Tambahkan kata di atas, atau tekan <b>Ubah</b> di rincian per kata pada halaman Tulis.</td></tr>'; return; }
+    if (!shown.length) { $('kRows').innerHTML = '<tr class="empty-row"><td colspan="3">Tidak ada kata yang cocok.</td></tr>'; return; }
+    $('kRows').innerHTML = shown.map(function(k){
+      var acts = confirmDel === k
+        ? '<span style="font-size:12.5px;color:var(--warn);font-weight:600">Hapus?</span><button type="button" class="danger" data-a="del-yes" data-k="'+esc(k)+'">Ya, hapus</button><button type="button" data-a="del-no">Batal</button>'
+        : '<button type="button" data-a="edit" data-k="'+esc(k)+'">Ubah</button><button type="button" class="danger" data-a="del" data-k="'+esc(k)+'">Hapus</button>';
+      return '<tr><td><b>'+esc(k)+'</b></td><td class="ar">'+esc(Kamus.dict[k])+'</td><td><div class="acts">'+acts+'</div></td></tr>';
+    }).join('');
+  }
+  $('kRows').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var a = b.dataset.a, k = b.dataset.k;
+    if (a === 'edit') { startEdit(k); }
+    else if (a === 'del') { confirmDel = k; renderKamus(); }
+    else if (a === 'del-no') { confirmDel = null; renderKamus(); }
+    else if (a === 'del-yes') { confirmDel = null; Kamus.remove(k).then(function(){ toast('“' + k + '” dihapus'); }); }
+  });
+  function startEdit(k){
+    editing = k; $('kLatin').value = k; $('kPegon').value = Kamus.dict[k];
+    $('kFormTitle').textContent = 'Ubah kata'; $('kCancel').style.display = ''; $('kSave').textContent = 'Simpan perubahan';
+    $('kPegon').focus(); window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function resetForm(){
+    editing = null; $('kForm').reset();
+    $('kFormTitle').textContent = 'Tambah kata'; $('kCancel').style.display = 'none'; $('kSave').textContent = 'Simpan';
+  }
+  $('kCancel').addEventListener('click', resetForm);
+  $('kAuto').addEventListener('click', function(){
+    var l = $('kLatin').value.trim();
+    if (!l) { toast('Isi kata Latin dulu'); $('kLatin').focus(); return; }
+    $('kPegon').value = PegonEngine.transliterate(l, opts({ userDict: {} })); $('kPegon').focus();
+  });
+  $('kForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var l = $('kLatin').value.trim().toLowerCase(), p = $('kPegon').value.trim();
+    if (!l || !p) return;
+    var btn = $('kSave'); btn.disabled = true;
+    Kamus.save(l, p, editing).then(function(){ btn.disabled = false; toast('“' + l + '” disimpan'); resetForm(); $('kLatin').focus(); },
+      function(){ btn.disabled = false; });
+  });
+  $('kSearch').addEventListener('input', renderKamus);
+  $('kExp').addEventListener('click', function(){
+    var t = Kamus.toText(Kamus.dict);
+    if (!t) { toast('Kamus masih kosong'); return; }
+    copyText(t, 'Seluruh kamus disalin (' + Object.keys(Kamus.dict).length + ' kata)');
+  });
+  $('kImpBtn').addEventListener('click', function(){ $('kImp').classList.toggle('on'); $('kImpText').focus(); });
+  $('kImpCancel').addEventListener('click', function(){ $('kImp').classList.remove('on'); });
+  $('kImpGo').addEventListener('click', function(){
+    var d = Kamus.parse($('kImpText').value), n = Object.keys(d).length;
+    if (!n) { toast('Tidak ada baris dengan format latin = pegon'); return; }
+    var btn = this; btn.disabled = true; btn.textContent = 'Mengimpor ' + n + ' kata…';
+    Kamus.importMany(d).then(function(){
+      btn.disabled = false; btn.textContent = 'Impor'; $('kImpText').value=''; $('kImp').classList.remove('on'); toast(n + ' kata diimpor');
+    }, function(){ btn.disabled = false; btn.textContent = 'Impor'; });
+  });
+
+  /* ================= Halaman Pedoman SOP (bisa diedit) ================= */
+  var pedEdit = false, pedRowEdit = null, pedDel = null, atEdit = null;
+  var AR_RE = /([؀-ۿݐ-ݿ][؀-ۿݐ-ݿ\s…+\/]*)/g;
+  function arWrap(t){ return esc(t).replace(AR_RE, '<span class="ar">$1</span>'); }
+
+  function groups(){
+    var order = [], g = {};
+    Data.pedoman.forEach(function(r){ if (!g[r.kelompok]) { g[r.kelompok] = []; order.push(r.kelompok); } g[r.kelompok].push(r); });
+    return { order: order, g: g };
+  }
+  function rowForm(r){
+    return '<tr class="pform"><td colspan="4"><div class="pf">' +
+      '<input class="inp" data-f="bunyi" placeholder="Bunyi / posisi, mis. E di akhir kata" value="'+esc(r.bunyi||'')+'">' +
+      '<input class="inp ar" data-f="huruf" dir="rtl" placeholder="ى" value="'+esc(r.huruf||'')+'">' +
+      '<input class="inp" data-f="contoh" placeholder="Contoh, mis. oke → اوكى" value="'+esc(r.contoh||'')+'">' +
+      '<div class="btns"><button type="button" class="primary" data-a="p-save" data-id="'+esc(r.id||'')+'" data-k="'+esc(r.kelompok||'')+'">Simpan</button><button type="button" data-a="p-cancel">Batal</button></div>' +
+      '</div></td></tr>';
+  }
+  function renderPedoman(){
+    var G = groups(), html = '';
+    $('btnPedEdit').textContent = pedEdit ? 'Selesai mengedit' : 'Edit pedoman';
+    $('btnPedEdit').classList.toggle('primary', pedEdit);
+    $('pedTools').style.display = pedEdit ? '' : 'none';
+    G.order.forEach(function(k){
+      html += '<div><h3>' + esc(k) + '</h3><table>';
+      G.g[k].forEach(function(r){
+        if (r._draft) return;
+        if (pedEdit && pedRowEdit === r.id) { html += rowForm(r); return; }
+        var acts = '';
+        if (pedEdit) acts = pedDel === r.id
+          ? '<td class="pa"><button type="button" class="danger" data-a="p-del-yes" data-id="'+esc(r.id)+'">Hapus</button><button type="button" data-a="p-del-no">Batal</button></td>'
+          : '<td class="pa"><button type="button" data-a="p-edit" data-id="'+esc(r.id)+'">Ubah</button><button type="button" class="danger" data-a="p-del" data-id="'+esc(r.id)+'">×</button></td>';
+        html += '<tr><td>' + esc(r.bunyi) + '</td><td class="ar">' + esc(r.huruf) + '</td><td>' + arWrap(r.contoh) + '</td>' + acts + '</tr>';
+      });
+      if (pedEdit && pedRowEdit === 'new:' + k) html += rowForm({ kelompok: k });
+      html += '</table>';
+      if (pedEdit && pedRowEdit !== 'new:' + k) html += '<button type="button" class="addrow" data-a="p-add" data-k="'+esc(k)+'">+ Tambah baris</button>';
+      html += '</div>';
+    });
+    if (!G.order.length) html = '<p class="note" style="padding:14px 0">Pedoman masih kosong. Tekan <b>Edit pedoman</b> lalu <b>+ Kelompok baru</b>.</p>';
+    $('pedList').innerHTML = html;
+  }
+  $('btnPedEdit').addEventListener('click', function(){ pedEdit = !pedEdit; pedRowEdit = null; pedDel = null; renderPedoman(); });
+  $('pedTools').addEventListener('submit', function(e){
+    e.preventDefault();
+    var k = $('pedGroupName').value.trim(); if (!k) return;
+    $('pedGroupName').value = '';
+    var exists = Data.pedoman.some(function(r){ return r.kelompok === k; });
+    if (!exists) Data.pedoman.push({ id: '', kelompok: k, bunyi: '', huruf: '', contoh: '', _draft: true });
+    pedRowEdit = 'new:' + k; renderPedoman();
+    Data.pedoman = Data.pedoman.filter(function(r){ return !r._draft; });
+  });
+  $('pedList').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var a = b.dataset.a;
+    if (a === 'p-edit') { pedRowEdit = b.dataset.id; pedDel = null; renderPedoman(); }
+    else if (a === 'p-add') { pedRowEdit = 'new:' + b.dataset.k; pedDel = null; renderPedoman(); }
+    else if (a === 'p-cancel') { pedRowEdit = null; renderPedoman(); }
+    else if (a === 'p-del') { pedDel = b.dataset.id; renderPedoman(); }
+    else if (a === 'p-del-no') { pedDel = null; renderPedoman(); }
+    else if (a === 'p-del-yes') { pedDel = null; Data.adminRun('hapusPedoman', [b.dataset.id], 'Baris pedoman dihapus'); }
+    else if (a === 'p-save') {
+      var box = b.closest('.pf'), v = {};
+      box.querySelectorAll('[data-f]').forEach(function(i){ v[i.dataset.f] = i.value.trim(); });
+      if (!v.bunyi) { toast('Isi kolom Bunyi / posisi dulu'); return; }
+      b.disabled = true;
+      Data.adminRun('simpanPedoman', [{ id: b.dataset.id, kelompok: b.dataset.k, bunyi: v.bunyi, huruf: v.huruf, contoh: v.contoh }], 'Pedoman disimpan')
+        .then(function(){ pedRowEdit = null; renderPedoman(); }, function(){ b.disabled = false; });
+    }
+  });
+
+  /* ---- Aturan huruf yang dipakai mesin ---- */
+  function renderAturan(){
+    var K = PegonEngine.KONSONAN_LIST, CONS = PegonEngine.CONS, AK = PegonEngine.AKHIR;
+    function row(jenis, latin, bawaan, label){
+      var ov = Data.aturan[jenis], has = Object.prototype.hasOwnProperty.call(ov, latin);
+      var val = has ? ov[latin] : bawaan;
+      var key = jenis + ':' + latin;
+      var shown = val ? '<span class="ar">' + esc(val) + '</span>' : '<span class="muted">aturan biasa</span>';
+      var cell = atEdit === key
+        ? '<input class="inp ar" dir="rtl" style="max-width:120px" value="'+esc(val)+'" data-at="'+esc(key)+'"' + (jenis === 'akhir' ? ' placeholder="kosong = biasa"' : '') + '>'
+        : shown;
+      var acts = atEdit === key
+        ? '<button type="button" class="primary" data-a="at-save" data-j="'+jenis+'" data-l="'+esc(latin)+'">Simpan</button><button type="button" data-a="at-cancel">Batal</button>'
+        : '<button type="button" data-a="at-edit" data-k="'+esc(key)+'">Ubah</button>' + (has ? '<button type="button" data-a="at-reset" data-j="'+jenis+'" data-l="'+esc(latin)+'" title="Kembalikan ke bawaan SOP">Bawaan</button>' : '');
+      return '<tr><td><b>' + esc(label || latin) + '</b></td><td style="text-align:right">' + cell + '</td><td>' +
+        (has ? '<span class="tag own">diubah</span>' : '<span class="tag">bawaan</span>') + '</td><td class="pa">' + acts + '</td></tr>';
+    }
+    $('atKons').innerHTML = K.map(function(l){ return row('konsonan', l, CONS[l]); }).join('');
+    $('atAkhir').innerHTML = ['a','i','u','o','e'].map(function(v){ return row('akhir', v, AK[v] || '', v + ' di akhir kata'); }).join('');
+  }
+  ['atKons','atAkhir'].forEach(function(id){
+    $(id).addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      var a = b.dataset.a;
+      if (a === 'at-edit') { atEdit = b.dataset.k; renderAturan(); var inp = document.querySelector('[data-at="'+atEdit+'"]'); if (inp) inp.focus(); }
+      else if (a === 'at-cancel') { atEdit = null; renderAturan(); }
+      else if (a === 'at-reset') { Data.adminRun('hapusAturan', [b.dataset.j, b.dataset.l], 'Dikembalikan ke bawaan SOP'); }
+      else if (a === 'at-save') {
+        var inp = b.closest('tr').querySelector('input'), v = inp ? inp.value.trim() : '';
+        if (b.dataset.j === 'konsonan' && !v) { toast('Huruf Pegon tidak boleh kosong'); return; }
+        b.disabled = true;
+        Data.adminRun('simpanAturan', [b.dataset.j, b.dataset.l, v], 'Aturan disimpan dan langsung dipakai')
+          .then(function(){ atEdit = null; renderAturan(); }, function(){ b.disabled = false; });
+      }
+    });
+  });
+
+  /* ================= Peran: Admin & Pengguna ================= */
+  var Role = {
+    admin: false, token: '',
+    set: function(isAdmin, token){
+      this.admin = !!isAdmin; this.token = isAdmin ? token : '';
+      store.set('pegon-admin-token' + (SERVER ? '' : '-uji'), this.token);
+      document.body.classList.toggle('is-admin', this.admin);
+      $('roleName').textContent = this.admin ? 'Admin' : 'Pengguna';
+      $('roleAct').textContent = this.admin ? 'Keluar' : 'Masuk Admin';
+      if (!this.admin) { pedEdit = false; atEdit = null; route(); }
+    },
+    restore: function(){
+      var t = store.get('pegon-admin-token' + (SERVER ? '' : '-uji')), self = this;
+      if (!t) return;
+      call('cekAdmin', [t]).then(function(ok){ if (ok) { self.set(true, t); route(); } else self.set(false, ''); }, function(){});
+    }
+  };
+  function openLogin(){
+    $('loginErr').textContent = ''; $('loginPass').value = '';
+    $('mLogin').hidden = false; setTimeout(function(){ $('loginPass').focus(); }, 30);
+  }
+  function closeLogin(){ $('mLogin').hidden = true; }
+  $('btnRole').addEventListener('click', function(){
+    if (!Role.admin) { openLogin(); return; }
+    var t = Role.token;
+    Role.set(false, '');
+    call('logoutAdmin', [t]).catch(function(){});
+    toast('Keluar dari Admin. Sekarang sebagai Pengguna.');
+  });
+  $('loginCancel').addEventListener('click', closeLogin);
+  $('mLogin').addEventListener('click', function(e){ if (e.target === this) closeLogin(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('mLogin').hidden) closeLogin(); });
+  $('fLogin').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = $('loginGo'); btn.disabled = true; $('loginErr').textContent = '';
+    call('loginAdmin', [$('loginPass').value]).then(function(token){
+      btn.disabled = false; closeLogin(); Role.set(true, token);
+      toast('Masuk sebagai Admin'); route('pedoman');
+    }, function(err){
+      btn.disabled = false;
+      $('loginErr').textContent = (err && err.message) ? err.message : 'Gagal masuk, coba lagi';
+      $('loginPass').select();
+    });
+  });
+  $('fPass').addEventListener('submit', function(e){
+    e.preventDefault();
+    if ($('pwNew').value !== $('pwNew2').value) { toast('Ulangi sandi baru belum sama'); return; }
+    var btn = $('pwSave'); btn.disabled = true;
+    call('gantiSandi', [Role.token, $('pwOld').value, $('pwNew').value]).then(function(){
+      btn.disabled = false; $('fPass').reset(); toast('Sandi admin diganti');
+    }, function(err){
+      btn.disabled = false; toast((err && err.message) ? err.message : 'Gagal mengganti sandi');
+      if (err && /Sesi admin/.test(err.message || '')) Role.set(false, '');
+    });
+  });
+
+  /* ================= Navigasi & tanggal ================= */
+  function route(force){
+    var v = force || (location.hash || '#tulis').slice(1);
+    if (['tulis','kamus','pedoman'].indexOf(v) < 0) v = 'tulis';
+    if (v === 'pedoman' && !Role.admin) {
+      if (force === 'pedoman' || location.hash === '#pedoman') toast('Menu Pedoman SOP khusus Admin');
+      v = 'tulis';
+    }
+    document.querySelectorAll('.view').forEach(function(el){ el.classList.toggle('on', el.id === 'view-' + v); });
+    document.querySelectorAll('nav.tabs a').forEach(function(a){ a.classList.toggle('active', a.dataset.v === v); });
+  }
+  window.addEventListener('hashchange', function(){ route(); });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[data-v]'); if (!a) return;
+    e.preventDefault(); route(a.dataset.v); window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  (function(){
+    var HARI = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    var BULAN = ['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Syakban','Ramadan','Syawal','Zulkaidah','Zulhijah'];
+    function tampil(){
+      var now = new Date(), el = $('hijri');
+      try {
+        var parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', {day:'numeric', month:'numeric', year:'numeric'}).formatToParts(now);
+        var g = {}; parts.forEach(function(p){ g[p.type] = p.value; });
+        el.textContent = HARI[now.getDay()] + ', ' + g.day + ' ' + BULAN[(+g.month) - 1] + ' ' + parseInt(g.year, 10) + ' H';
+      } catch(e) { el.textContent = HARI[now.getDay()]; }
+    }
+    tampil(); setInterval(tampil, 60000);
+  })();
+
+  function refreshAll(){ run(); renderKamus(); renderPedoman(); renderAturan(); }
+
+  $('latin').value = store.get('pegon-text') || EXAMPLES[2];
+  route();
+  refreshAll();
+  Kamus.connect();
+  Role.restore();
+})();
+</script>
+</body>
+</html>
