@@ -12,7 +12,7 @@
      Isi API_URL dengan URL aplikasi web Apps Script (berakhiran /exec).
      Jika dikosongkan, aplikasi berjalan dalam "mode uji": data hanya tersimpan di browser. */
   window.PEGON_CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbwBie2cnwgg2Bh_83QWU17nVw0Y3H2rWt52PviqlvK8cZwr8BcsLM6VlVARTsgDlvC2/exec'
+    API_URL: ''
   };
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1050,6 +1050,51 @@
   @media (max-width: 720px) { .pw-grid { grid-template-columns: 1fr; } }
   .pw-grid label { display: block; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
 
+  /* ================= Header menempel saat digulir ================= */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    transition: padding 0.25s ease, border-radius 0.25s ease, box-shadow 0.25s ease;
+  }
+  header p, .brand-icon, h1, h1 .ar, nav.tabs { transition: all 0.25s ease; }
+  header.compact {
+    padding-top: calc(10px + env(safe-area-inset-top, 0px));
+    padding-bottom: 10px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 0 10px 28px -10px rgba(120, 53, 15, 0.45);
+  }
+  header.compact p { max-height: 0; margin: 0; opacity: 0; overflow: hidden; }
+  header.compact .brand-icon { width: 36px; height: 36px; border-radius: 11px; }
+  header.compact .brand-icon svg { width: 19px; height: 19px; }
+  header.compact h1 { font-size: 19px; }
+  header.compact h1 .ar { font-size: 24px; }
+  header.compact nav.tabs { margin-top: 10px; padding: 4px; }
+  header.compact nav.tabs a { padding: 6px 14px; }
+  header p { max-height: 60px; }
+  @media (max-width: 600px) {
+    header.compact { padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: 8px; }
+    header.compact .hero-side .badge { display: none; }
+    header.compact h1 { font-size: 17px; }
+    header.compact h1 .ar { font-size: 21px; }
+    header.compact nav.tabs { margin-top: 8px; }
+  }
+
+  /* ================= Kamus: urutan & duplikat ================= */
+  .sort-btn {
+    margin-left: 8px; padding: 2px 8px; font-size: 11px; font-weight: 700;
+    border-radius: 999px; letter-spacing: 0.02em; text-transform: none;
+    background: var(--sky-soft); color: var(--sky); border-color: transparent;
+    vertical-align: middle;
+  }
+  .sort-btn svg { width: 12px; height: 12px; }
+  .sort-btn:hover { background: var(--sky); color: #ffffff; border-color: transparent; }
+  .dup-note { grid-column: 1 / -1; margin: -2px 0 0; font-size: 12.5px; font-weight: 600; color: var(--warn); display: none; }
+  .dup-note.on { display: block; }
+  .dup-note button { padding: 2px 9px; font-size: 12px; margin-left: 6px; }
+  .inp.dup { border-color: var(--warn); box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15); }
+
   /* ================= Toast ================= */
   .toast {
     position: fixed;
@@ -1304,12 +1349,13 @@
           <button type="button" id="kAuto" style="white-space:nowrap" title="Isi dengan hasil aturan SOP, lalu perbaiki">Isi otomatis</button>
         </div>
       </div>
+      <p class="dup-note" id="kDup"></p>
       <div class="btns">
         <button type="submit" class="primary" id="kSave">Simpan</button>
         <button type="button" id="kCancel" style="display:none">Batal</button>
       </div>
     </form>
-    <p class="note" id="kHint">Kamus ini dipakai bersama oleh semua pengguna dan tersimpan di Google Spreadsheet. Kata di kamus dipakai lebih dulu dari semua aturan SOP, termasuk kamus serapan Arab.</p>
+    <p class="note" id="kHint">Kamus ini dipakai bersama oleh semua pengguna dan tersimpan di Google Spreadsheet. Kata di kamus dipakai lebih dulu dari semua aturan SOP, termasuk kamus serapan Arab. Satu kata Latin hanya boleh punya satu tulisan Pegon, tetapi satu tulisan Pegon boleh dipakai beberapa kata Latin.</p>
   </section>
 
   <section class="card" style="margin-top:18px">
@@ -1327,13 +1373,13 @@
       </button>
     </div>
     <div class="imp" id="kImp">
-      <div style="font-size:13px;color:var(--ink-2)">Tempel daftar, satu kata per baris dengan format <code>latin = pegon</code>. Kata yang sudah ada akan diperbarui.</div>
+      <div style="font-size:13px;color:var(--ink-2)">Tempel daftar, satu kata per baris dengan format <code>latin = pegon</code>. Kata Latin yang sudah ada di Kamus akan ditolak (dilewati).</div>
       <textarea id="kImpText" spellcheck="false" placeholder="kalimat = كليمة&#10;pesantren = فسانترين"></textarea>
       <div class="btns"><button class="primary" id="kImpGo">Impor</button><button id="kImpCancel">Tutup</button></div>
     </div>
     <div class="scroll" style="max-height:520px">
       <table class="kamus-list">
-        <thead><tr><th>Latin</th><th style="text-align:right">Pegon</th><th style="text-align:right">Aksi</th></tr></thead>
+        <thead><tr><th>Latin<button type="button" class="sort-btn" id="kSort" title="Ubah urutan"></button></th><th style="text-align:right">Pegon</th><th style="text-align:right">Aksi</th></tr></thead>
         <tbody id="kRows"></tbody>
       </table>
     </div>
@@ -1668,9 +1714,15 @@ var PegonEngine = (function () {
     },
     out: function(){ store.set('pegon-uji', JSON.stringify(this.st)); return JSON.parse(JSON.stringify(this.st)); },
     getData: function(){ this.state(); return this.out(); },
-    simpanKata: function(l, p, old){ var s = this.state(); s.kamus = s.kamus.filter(function(x){ return x.latin !== l && x.latin !== old; }); s.kamus.push({ latin: l, pegon: p }); return this.out(); },
+    simpanKata: function(l, p, old){ var s = this.state();
+      var ada = s.kamus.some(function(x){ return x.latin === l; });
+      if (ada && (!old || old !== l)) throw new Error('Kata "' + l + '" sudah ada di Kamus. Ubah kata yang ada, jangan menambah dobel.');
+      s.kamus = s.kamus.filter(function(x){ return x.latin !== l && x.latin !== old; }); s.kamus.push({ latin: l, pegon: p }); return this.out(); },
     hapusKata: function(l){ var s = this.state(); s.kamus = s.kamus.filter(function(x){ return x.latin !== l; }); return this.out(); },
-    imporKata: function(ps){ var self = this; ps.forEach(function(p){ self.simpanKata(p[0], p[1]); }); return this.out(); },
+    imporKata: function(ps){ var s = this.state(), ada = {}, tolak = [], n = 0;
+      s.kamus.forEach(function(x){ ada[x.latin] = 1; });
+      ps.forEach(function(p){ if (ada[p[0]]) { tolak.push(p[0]); return; } ada[p[0]] = 1; s.kamus.push({ latin: p[0], pegon: p[1] }); n++; });
+      var d = this.out(); d.impor = { ditambah: n, ditolak: tolak }; return d; },
     sandi: function(){ return store.get('pegon-uji-sandi') || 'pegon123'; },
     loginAdmin: function(p){ if (p !== this.sandi()) throw new Error('Sandi admin salah.'); var t = 'uji-' + Date.now(); store.set('pegon-uji-token', t); return t; },
     cekAdmin: function(t){ return !!t && t === store.get('pegon-uji-token'); },
@@ -1737,6 +1789,7 @@ var PegonEngine = (function () {
       return call(fn, args).then(function(d){
         self.busy--; self.apply(d); self.okStatus();
         if (okMsg) toast(okMsg);
+        return d;
       }, function(err){
         self.busy--;
         setStatus('warn', 'Gagal menyimpan');
@@ -1777,7 +1830,16 @@ var PegonEngine = (function () {
       return Data.run('simpanKata', [k, v, oldLatin || '']);
     },
     remove: function(latin){ return Data.run('hapusKata', [latin.toLowerCase()]); },
-    importMany: function(d){ return Data.run('imporKata', [Object.keys(d).map(function(k){ return [k, d[k]]; })]); },
+    // baris "latin = pegon" -> [[latin, pegon], ...] tanpa membuang baris dobel (server yang menolak)
+    pairs: function(text){
+      var out = [];
+      (text || '').split('\n').forEach(function(line){
+        var i = line.indexOf('=');
+        if (i > 0) { var k = line.slice(0,i).trim().toLowerCase(), v = line.slice(i+1).trim(); if (k && v) out.push([k, v]); }
+      });
+      return out;
+    },
+    importMany: function(pairs){ return Data.run('imporKata', [pairs]); },
     connect: function(){ Data.connect(); }
   };
   function setStatus(cls, text){
@@ -1858,7 +1920,8 @@ var PegonEngine = (function () {
       td.firstChild.addEventListener('keydown', function(ev){ if (ev.key === 'Enter') b.click(); });
     } else {
       var v = td.firstChild.value.trim(); if (!v) return;
-      Kamus.save(b.dataset.w, v).then(function(){ toast('“' + b.dataset.w + '” disimpan ke Kamus'); run(); });
+      var w = b.dataset.w, sudahAda = Object.prototype.hasOwnProperty.call(Kamus.dict, w);
+      Kamus.save(w, v, sudahAda ? w : '').then(function(){ toast('“' + w + '” ' + (sudahAda ? 'diperbarui di' : 'disimpan ke') + ' Kamus'); run(); }, function(){});
     }
   });
 
@@ -1947,8 +2010,29 @@ var PegonEngine = (function () {
 
   /* ================= Halaman Kamus ================= */
   var editing = null, confirmDel = null;
+  var kSort = store.get('pegon-kamus-urut') === 'desc' ? 'desc' : 'asc';
+  $('kSort').addEventListener('click', function(){
+    kSort = kSort === 'asc' ? 'desc' : 'asc';
+    store.set('pegon-kamus-urut', kSort); renderKamus();
+  });
+  // cek kata Latin dobel saat mengetik
+  function cekDup(){
+    var l = $('kLatin').value.trim().toLowerCase();
+    var dup = l && Object.prototype.hasOwnProperty.call(Kamus.dict, l) && l !== editing;
+    $('kLatin').classList.toggle('dup', !!dup);
+    $('kDup').classList.toggle('on', !!dup);
+    $('kDup').innerHTML = dup ? 'Kata “' + esc(l) + '” sudah ada di Kamus: <span class="ar" style="font-family:var(--ar);font-size:19px">' + esc(Kamus.dict[l]) +
+      '</span><button type="button" id="kDupEdit">Ubah kata ini</button>' : '';
+    return !!dup;
+  }
+  $('kLatin').addEventListener('input', cekDup);
+  $('kDup').addEventListener('click', function(e){ if (e.target.id === 'kDupEdit') { var l = $('kLatin').value.trim().toLowerCase(); startEdit(l); cekDup(); } });
   function renderKamus(){
-    var keys = Object.keys(Kamus.dict).sort();
+    var keys = Object.keys(Kamus.dict).sort(function(a, b){ return a.localeCompare(b, 'id', { sensitivity: 'base' }); });
+    if (kSort === 'desc') keys.reverse();
+    $('kSort').innerHTML = (kSort === 'desc' ? 'Z–A' : 'A–Z') +
+      ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
+      (kSort === 'desc' ? '<path d="m7 15 5 5 5-5"/><path d="M12 4v16"/>' : '<path d="m7 9 5-5 5 5"/><path d="M12 20V4"/>') + '</svg>';
     $('navCount').textContent = keys.length;
     $('kCount2').textContent = keys.length;
     var q = $('kSearch').value.trim().toLowerCase();
@@ -1977,7 +2061,7 @@ var PegonEngine = (function () {
     $('kPegon').focus(); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   function resetForm(){
-    editing = null; $('kForm').reset();
+    editing = null; $('kForm').reset(); cekDup();
     $('kFormTitle').textContent = 'Tambah kata'; $('kCancel').style.display = 'none'; $('kSave').textContent = 'Simpan';
   }
   $('kCancel').addEventListener('click', resetForm);
@@ -1990,8 +2074,9 @@ var PegonEngine = (function () {
     e.preventDefault();
     var l = $('kLatin').value.trim().toLowerCase(), p = $('kPegon').value.trim();
     if (!l || !p) return;
+    if (cekDup()) { toast('Kata “' + l + '” sudah ada di Kamus. Satu kata Latin hanya boleh satu tulisan Pegon.'); $('kLatin').focus(); return; }
     var btn = $('kSave'); btn.disabled = true;
-    Kamus.save(l, p, editing).then(function(){ btn.disabled = false; toast('“' + l + '” disimpan'); resetForm(); $('kLatin').focus(); },
+    Kamus.save(l, p, editing).then(function(){ btn.disabled = false; toast('“' + l + '” disimpan'); resetForm(); cekDup(); $('kLatin').focus(); },
       function(){ btn.disabled = false; });
   });
   $('kSearch').addEventListener('input', renderKamus);
@@ -2003,11 +2088,22 @@ var PegonEngine = (function () {
   $('kImpBtn').addEventListener('click', function(){ $('kImp').classList.toggle('on'); $('kImpText').focus(); });
   $('kImpCancel').addEventListener('click', function(){ $('kImp').classList.remove('on'); });
   $('kImpGo').addEventListener('click', function(){
-    var d = Kamus.parse($('kImpText').value), n = Object.keys(d).length;
+    var pairs = Kamus.pairs($('kImpText').value), n = pairs.length;
     if (!n) { toast('Tidak ada baris dengan format latin = pegon'); return; }
     var btn = this; btn.disabled = true; btn.textContent = 'Mengimpor ' + n + ' kata…';
-    Kamus.importMany(d).then(function(){
-      btn.disabled = false; btn.textContent = 'Impor'; $('kImpText').value=''; $('kImp').classList.remove('on'); toast(n + ' kata diimpor');
+    // baris mana yang akan ditolak: kata Latin sudah ada di Kamus, atau dobel di daftar
+    var seen = {}; Object.keys(Kamus.dict).forEach(function(k){ seen[k] = 1; });
+    var barisTolak = pairs.filter(function(p){ if (seen[p[0]]) return true; seen[p[0]] = 1; return false; });
+    Kamus.importMany(pairs).then(function(d){
+      btn.disabled = false; btn.textContent = 'Impor';
+      var r = (d && d.impor) || { ditambah: n, ditolak: [] };
+      if (r.ditolak.length) {
+        // sisakan baris yang ditolak supaya bisa diperiksa
+        $('kImpText').value = barisTolak.map(function(p){ return p[0] + ' = ' + p[1]; }).join('\n');
+        toast(r.ditambah + ' kata ditambahkan, ' + r.ditolak.length + ' ditolak karena kata Latin sudah ada: ' + r.ditolak.slice(0, 5).join(', ') + (r.ditolak.length > 5 ? ', …' : ''));
+      } else {
+        $('kImpText').value = ''; $('kImp').classList.remove('on'); toast(r.ditambah + ' kata ditambahkan');
+      }
     }, function(){ btn.disabled = false; btn.textContent = 'Impor'; });
   });
 
@@ -2204,6 +2300,19 @@ var PegonEngine = (function () {
       } catch(e) { el.textContent = HARI[now.getDay()]; }
     }
     tampil(); setInterval(tampil, 60000);
+  })();
+
+  // header jadi ringkas saat halaman digulir
+  (function(){
+    var hd = document.querySelector('header'), on = false, ticking = false;
+    function cek(){
+      ticking = false;
+      var y = window.scrollY || document.documentElement.scrollTop;
+      var mau = on ? y > 20 : y > 60; // jeda supaya tidak berkedip di batas
+      if (mau !== on) { on = mau; hd.classList.toggle('compact', on); }
+    }
+    window.addEventListener('scroll', function(){ if (!ticking) { ticking = true; requestAnimationFrame(cek); } }, { passive: true });
+    cek();
   })();
 
   function refreshAll(){ run(); renderKamus(); renderPedoman(); renderAturan(); }
