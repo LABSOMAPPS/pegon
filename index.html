@@ -1068,10 +1068,10 @@
     width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center;
     background: var(--sky-soft); color: var(--sky); font-weight: 800; font-size: 13px;
   }
-  .soal-out.rtl ol.sl > li { padding: 14px 40px 14px 0; }
-  .soal-out.rtl ol.sl > li::before { left: auto; right: 0; content: counter(s, arabic-indic); }
-  .soal-out.rtl { direction: rtl; text-align: right; font-family: var(--ar); }
-  .soal-out.rtl .q, .soal-out.rtl .opt, .soal-out.rtl .ans { font-size: 24px; line-height: 1.9; }
+  .soal-out ol.sl > li.rtl { padding: 14px 40px 14px 0; direction: rtl; text-align: right; font-family: var(--ar); }
+  .soal-out ol.sl > li.rtl::before { left: auto; right: 0; content: counter(s, arabic-indic); }
+  .soal-out li.rtl .q, .soal-out li.rtl .opt, .soal-out li.rtl .ans { font-size: 24px; line-height: 1.9; }
+  .soal-out h3.sj[dir=rtl] { font-family: var(--ar); font-size: 26px; text-align: right; }
   .soal-out .q { font-size: 15.5px; font-weight: 600; color: var(--ink); }
   .soal-out .jt { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; margin-inline-start: 8px; vertical-align: middle; }
   .soal-out ul.opts-l { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px 18px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
@@ -1080,7 +1080,7 @@
   .soal-out .opt.benar b { color: var(--emerald); }
   .soal-out .ans { display: none; margin-top: 10px; padding: 9px 12px; border-radius: 10px; background: var(--emerald-soft); color: #065f46; font-size: 14px; }
   .soal-out .ans small { display: block; margin-top: 4px; color: #047857; font-size: 13px; }
-  .soal-out.rtl .ans small { font-size: 20px; }
+  .soal-out li.rtl .ans small { font-size: 20px; }
   .soal-out.kunci .ans { display: block; }
   .soal-out.kunci .opt.benar { font-weight: 700; color: #065f46; }
   .soal-out .garis { margin-top: 10px; height: 54px; border-bottom: 1px dotted var(--line-strong); background: repeating-linear-gradient(transparent 0 26px, var(--line) 26px 27px); }
@@ -1101,7 +1101,39 @@
   .bl.C4, .bl.C5, .bl.C6 { background: var(--violet-soft); color: var(--violet-ink); }
   .soal-out .meta { direction: ltr; text-align: left; display: flex; gap: 6px; align-items: flex-start; flex-wrap: wrap; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
   .soal-out .meta .ind { flex: 1; min-width: 200px; padding-top: 2px; }
-  .soal-out.no-ind .meta, .soal-out.no-ind .kisi { display: none; }
+  .soal-out.no-ind .meta > :not(.pick), .soal-out.no-ind .kisi { display: none; }
+  .soal-out.no-ind .meta.nopick { display: none; }
+  /* centang soal: Masukkan ke Bank Soal / Pilih */
+  label.pick { display: inline-flex; align-items: center; cursor: pointer; }
+  label.pick input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+  label.pick span, span.pick { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 6px; border-radius: 999px; border: 1px solid var(--line-strong); background: #fff; font-size: 12px; font-weight: 700; color: var(--ink-2); transition: all .15s ease; }
+  label.pick span::before { content: ""; width: 15px; height: 15px; border-radius: 5px; border: 2px solid var(--line-strong); background: #fff; display: grid; place-items: center; font-size: 11px; line-height: 1; color: #fff; }
+  label.pick input:checked + span { border-color: var(--cyan); background: #fffbeb; color: var(--sky); }
+  label.pick input:checked + span::before { content: "✓"; background: var(--grad-primary); border-color: transparent; }
+  label.pick input:focus-visible + span { outline: 2px solid var(--cyan); }
+  span.pick.saved { background: var(--emerald-soft); border-color: transparent; color: #047857; padding-left: 10px; }
+  .soal-out li.on { background: linear-gradient(90deg, rgba(254,243,199,.45), transparent 70%); }
+  .soal-out li.rtl.on { background: linear-gradient(270deg, rgba(254,243,199,.45), transparent 70%); }
+  .soal-out .mt { background: var(--sky-soft); color: var(--sky); }
+  .bar-pick { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); background: #fffbeb; font-size: 13px; }
+  .bar-pick .sp { flex: 1; }
+  #bPrint { display: none; }
+  .bar-pick:has(#bUpgrade[style*="none"]) { display: none; }
+  .soal-out .meta .ed { padding: 3px 10px; font-size: 12px; border-radius: 999px; }
+  .soal-out.no-ind .meta > .ed { display: inline-flex; }
+  .soal-out .tag.mt.ar { font-family: var(--ar); font-size: 15px; padding: 0 10px; }
+  .modal-card.wide { max-width: 780px; max-height: 92vh; overflow: auto; }
+  .ef { margin-bottom: 12px; }
+  .ef > label { display: block; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .ef textarea.inp { resize: vertical; min-height: 44px; font: inherit; }
+  .ef .inp.ar { font-family: var(--ar); font-size: 21px; padding: 4px 12px; line-height: 1.7; }
+  .ef-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
+  .po { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+  .po > .pair, .po > .inp { flex: 1; }
+  .po-b { display: inline-flex; align-items: center; gap: 4px; min-width: 40px; cursor: pointer; font-family: var(--ar); font-size: 18px; color: var(--sky); }
+  .po-b input { accent-color: var(--emerald); width: 17px; height: 17px; }
+  @media (max-width: 600px) { .pair, .ef-row { grid-template-columns: 1fr; } }
   .soal-out .kisi { margin-top: 18px; direction: ltr; text-align: left; font-family: 'Plus Jakarta Sans', sans-serif; }
   .soal-out .kisi h4 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--sky); }
   .soal-out .kisi table { font-size: 13px; border: 1px solid var(--line); border-radius: 12px; }
@@ -1117,7 +1149,11 @@
     header, .toast, .modal, .view:not(#view-soal), #view-soal > .card:not(#sOutCard), #sOutCard .card-h { display: none !important; }
     main { padding: 0 !important; }
     .card { box-shadow: none; border: 0; backdrop-filter: none; }
-    .soal-out ol.sl > li { break-inside: avoid; }
+    .soal-out ol.sl > li { break-inside: avoid; background: none !important; }
+    .pick, .bar-pick, .ed { display: none !important; }
+    .soal-out.no-ind .meta { display: none !important; }
+    body.print-bank > *:not(#bPrint) { display: none !important; }
+    body.print-bank #bPrint { display: block !important; }
     .soal-out ol.sl > li::before { border: 1px solid #999; background: #fff; }
   }
 
@@ -1212,6 +1248,11 @@
       <a href="#soal" data-v="soal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
         <span>Buat Soal</span>
+      </a>
+      <a href="#bank" data-v="bank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
+        <span>Soal</span>
+        <span class="n" id="navSoal">0</span>
       </a>
       <a href="#pedoman" data-v="pedoman" class="admin-only">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -1502,13 +1543,62 @@
         <h2>Soal</h2>
       </div>
       <div class="btns">
+        <a class="lnk" href="#bank" data-v="bank" style="font-size:12.5px;padding:5px 11px">Bank Soal →</a>
         <label class="sw"><input type="checkbox" id="sInd" checked> Indikator &amp; Bloom</label>
         <label class="sw"><input type="checkbox" id="sKunci"> Kunci jawaban</label>
         <button type="button" id="sCopy">Salin</button>
         <button type="button" id="sPrint">Cetak</button>
       </div>
     </div>
+    <div class="bar-pick" id="sPickBar" style="display:none">
+      <span>Centang soal yang bagus, lalu masukkan ke <b>Bank Soal</b>.</span>
+      <span class="sp"></span>
+      <button type="button" id="sPickAll">Pilih semua</button>
+      <button type="button" class="primary" id="sSaveBank">Masukkan ke Bank Soal</button>
+    </div>
     <div id="sOut" class="soal-out"><p class="note" style="padding:24px 16px;text-align:center">Belum ada soal. Tempel ibarat di atas lalu tekan <b>Buat Soal</b>.</p></div>
+  </section>
+</section>
+
+<!-- ============ BANK SOAL ============ -->
+<section class="view" id="view-bank">
+  <section class="card" style="margin-top:4px">
+    <div class="card-h">
+      <div class="card-title">
+        <span class="ico-badge violet" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M9 12h6"/><path d="M9 16h6"/></svg></span>
+        <h2>Bank Soal</h2>
+      </div>
+      <div class="btns">
+        <span class="status" id="bStatus">Memuat…</span>
+        <label class="sw"><input type="checkbox" id="bInd" checked> Indikator &amp; Bloom</label>
+        <label class="sw"><input type="checkbox" id="bKunci"> Kunci jawaban</label>
+      </div>
+    </div>
+    <div class="toolbar">
+      <input class="inp" id="bCari" placeholder="Cari soal, indikator, atau materi…">
+      <select class="inp" id="bMateri" style="max-width:220px;padding:8px 10px;font-size:13px"><option value="">Semua materi</option></select>
+      <select class="inp" id="bBloom" style="max-width:170px;padding:8px 10px;font-size:13px">
+        <option value="">Semua level</option>
+        <option value="LOTS">LOTS (C1–C3)</option><option value="HOTS">HOTS (C4–C6)</option>
+        <option value="C1">C1 Mengingat</option><option value="C2">C2 Memahami</option><option value="C3">C3 Menerapkan</option>
+        <option value="C4">C4 Menganalisis</option><option value="C5">C5 Mengevaluasi</option><option value="C6">C6 Mencipta</option>
+      </select>
+      <select class="inp" id="bJenis" style="max-width:160px;padding:8px 10px;font-size:13px">
+        <option value="">Semua bentuk</option><option value="pg">Pilihan ganda</option><option value="melengkapi">Melengkapi</option>
+        <option value="esai">Esai</option><option value="bs">Benar/Salah</option>
+      </select>
+      <span class="tag di" id="bCount">0 soal</span>
+    </div>
+    <div class="bar-pick">
+      <button type="button" id="bPickAll">Pilih semua</button>
+      <span id="bPicked" class="muted">Belum ada yang dipilih</span>
+      <span class="sp"></span>
+      <button type="button" id="bCopy">Salin</button>
+      <button type="button" id="bPrintBtn">Cetak</button>
+      <button type="button" class="danger" id="bDel">Hapus</button>
+    </div>
+    <div class="bar-pick" style="background:var(--amber-soft)"><button type="button" class="primary" id="bUpgrade" style="display:none"></button></div>
+    <div id="bOut" class="soal-out"><p class="note" style="padding:24px 16px;text-align:center">Memuat bank soal…</p></div>
   </section>
 </section>
 
@@ -1590,7 +1680,22 @@
     </div>
   </form>
 </div>
+<div class="modal" id="mEdit" hidden>
+  <form class="modal-card wide" id="fEdit" autocomplete="off">
+    <h3>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+      Ubah soal
+    </h3>
+    <p id="eHint"></p>
+    <div id="eBody"></div>
+    <div class="btns">
+      <button type="button" id="eCancel">Batal</button>
+      <button type="submit" class="primary" id="eSave">Simpan perubahan</button>
+    </div>
+  </form>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="bPrint" class="soal-out"></div>
 
 <script>
 /* Mesin alih aksara Latin -> Pegon, mengikuti "SOP Penulisan Pegon" (15 Nov 2026) */
@@ -1861,7 +1966,21 @@ var PegonEngine = (function () {
       if (f) Object.assign(f, r); else s.pedoman.push(Object.assign({}, r, { id: 'p' + Date.now() })); return this.out(); },
     hapusPedoman: function(t, id){ this.wajib(t); var s = this.state(); s.pedoman = s.pedoman.filter(function(x){ return x.id !== id; }); return this.out(); },
     simpanAturan: function(t, j, l, p){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); s.aturan.push({ jenis: j, latin: l, pegon: p }); return this.out(); },
-    hapusAturan: function(t, j, l){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); return this.out(); }
+    hapusAturan: function(t, j, l){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); return this.out(); },
+    // Bank Soal (mode uji: hanya di browser ini)
+    bank: function(){ var s = this.state(); if (!s.bank) s.bank = []; return s.bank; },
+    getSoal: function(){ var b = this.bank(); this.out(); return JSON.parse(JSON.stringify(b)).reverse(); },
+    simpanSoal: function(list){ var b = this.bank(), ids = [], n = 0, ada = 0;
+      (list || []).forEach(function(x){
+        var f = b.filter(function(y){ return y.jenis === x.jenis && y.bahasa === x.bahasa && y.pertanyaan === x.pertanyaan; })[0];
+        if (f) { ids.push(f.id); ada++; return; }
+        var id = 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        b.push(Object.assign({}, x, { id: id })); ids.push(id); n++; });
+      return { soal: this.getSoal(), simpan: { ditambah: n, sudahAda: ada, ids: ids } }; },
+    hapusSoal: function(ids){ var s = this.state(); s.bank = this.bank().filter(function(x){ return ids.indexOf(x.id) < 0; }); return { soal: this.getSoal() }; },
+    ubahSoal: function(list){ var b = this.bank(), n = 0;
+      list.forEach(function(x){ b.forEach(function(y, i){ if (y.id === x.id) { b[i] = Object.assign({}, y, x); n++; } }); });
+      return { soal: this.getSoal(), diubah: n }; }
   };
 
   function call(fn, args){
@@ -1898,6 +2017,7 @@ var PegonEngine = (function () {
       var at = { konsonan: {}, akhir: {} };
       (d.aturan || []).forEach(function(x){ if (at[x.jenis]) at[x.jenis][String(x.latin).toLowerCase()] = String(x.pegon || ''); });
       this.aturan = at; this.loaded = true;
+      if (typeof d.nSoal === 'number' && !Bank.loaded) $('navSoal').textContent = d.nSoal;
       refreshAll();
     },
     okStatus: function(){ setStatus(SERVER ? 'online' : 'warn', SERVER ? '☁ Data bersama · Google Spreadsheet' : 'Mode uji · API_URL belum diisi'); },
@@ -2370,27 +2490,32 @@ var PegonEngine = (function () {
     return k >= 0 ? sLabel(k, rtl) + '. ' + sTulis(s.pilihan[k], b) : sTulis(s.jawaban, b);
   }
   function blTag(c){ return c ? '<span class="bl ' + c + '">' + c + ' · ' + Soal.BLOOM[c] + '</span>' : ''; }
-  function renderSoal(){
-    var out = $('sOut'), h = Soal.hasil;
-    if (!h || !h.soal || !h.soal.length) return;
-    var b = h.bahasa, rtl = b !== 'latin';
-    out.classList.toggle('rtl', rtl);
-    out.classList.toggle('kunci', $('sKunci').checked);
-    out.classList.toggle('no-ind', !$('sInd').checked);
-    var html = '';
-    if (h.judul) html += '<h3 class="sj">' + esc(sTulis(h.judul, b)) + '</h3>';
-    // ringkasan sebaran Bloom
-    var hit = {}; h.soal.forEach(function(s){ if (s.bloom) hit[s.bloom] = (hit[s.bloom] || 0) + 1; });
-    var rk = Object.keys(hit).sort().map(function(c){ return c + ': ' + hit[c]; }).join(' · ');
+  /* Tampilan daftar soal, dipakai Buat Soal dan Bank Soal.
+     Tiap soal membawa tulisannya sendiri (s.bahasa) sehingga Latin, Pegon, dan Arab bisa bercampur.
+     o: { judul, bahasa, kunci, pick: 'buat' | 'bank' | null, dipilih: {kunci: true}, kunciPilih: fn(s, i) } */
+  function sRender(list, o){
+    o = o || {};
+    var html = '', kunci = !!o.kunci;
+    if (o.judul) { var jb = o.bahasa || 'latin'; html += '<h3 class="sj" dir="' + (jb === 'latin' ? 'ltr' : 'rtl') + '">' + esc(sTulis(o.judul, jb)) + '</h3>'; }
+    var hit = {}; list.forEach(function(s){ if (s.bloom) hit[s.bloom] = (hit[s.bloom] || 0) + 1; });
     html += '<ol class="sl">';
-    h.soal.forEach(function(s){
+    list.forEach(function(s, i){
+      var b = s.bahasa || o.bahasa || 'latin', rtl = b !== 'latin';
       var benar = s.jenis === 'pg' ? sIndexJawaban(s) : -1;
-      html += '<li><div class="meta">' + blTag(s.bloom) + '<span class="tag">' + esc(Soal.JENIS_NAMA[s.jenis] || s.jenis) + '</span>' +
+      var key = o.kunciPilih ? o.kunciPilih(s, i) : String(i), on = !!(o.dipilih && o.dipilih[key]);
+      var pick = '';
+      if (o.pick === 'buat') pick = s._bank ? '<span class="pick saved">✓ Di Bank Soal</span>'
+        : '<label class="pick"><input type="checkbox" data-k="' + esc(key) + '"' + (on ? ' checked' : '') + '><span>Masukkan</span></label>';
+      else if (o.pick === 'bank') pick = '<label class="pick"><input type="checkbox" data-k="' + esc(key) + '"' + (on ? ' checked' : '') + '><span>Pilih</span></label>' +
+        '<button type="button" class="mini ed" data-ed="' + esc(s.id) + '">✎ Ubah</button>';
+      html += '<li class="' + (rtl ? 'rtl' : '') + (on ? ' on' : '') + '"><div class="meta' + (pick ? '' : ' nopick') + '">' + pick + blTag(s.bloom) +
+        '<span class="tag">' + esc(Soal.JENIS_NAMA[s.jenis] || s.jenis) + '</span>' +
+        (o.pick === 'bank' && s.materi ? '<span class="tag mt' + (modePegon(s.bahasa) || s.bahasa === 'arab' ? ' ar' : '') + '">' + esc(sTulis(s.materi, s.bahasa)) + '</span>' : '') +
         (s.indikator ? '<span class="ind"><b>Indikator:</b> ' + esc(s.indikator) + '</span>' : '') + '</div>' +
         '<div class="q">' + esc(sTulis(s.pertanyaan, b)) + '</div>';
       if (s.jenis === 'pg' && s.pilihan.length) {
-        html += '<ul class="opts-l">' + s.pilihan.map(function(p, i){
-          return '<li class="opt' + (i === benar ? ' benar' : '') + '"><b>' + sLabel(i, rtl) + '.</b>' + esc(sTulis(p, b)) + '</li>';
+        html += '<ul class="opts-l">' + s.pilihan.map(function(p, j){
+          return '<li class="opt' + (j === benar ? ' benar' : '') + '"><b>' + sLabel(j, rtl) + '.</b>' + esc(sTulis(p, b)) + '</li>';
         }).join('') + '</ul>';
       } else if (s.jenis === 'bs') {
         html += '<ul class="opts-l"><li class="opt"><b>○</b>' + esc(sTulis('Benar', b)) + '</li><li class="opt"><b>○</b>' + esc(sTulis('Salah', b)) + '</li></ul>';
@@ -2401,40 +2526,361 @@ var PegonEngine = (function () {
         (s.pembahasan ? '<small>' + esc(sTulis(s.pembahasan, b)) + '</small>' : '') + '</div></li>';
     });
     html += '</ol>';
-    // kisi-kisi soal
-    html += '<div class="kisi"><h4>Kisi-kisi soal</h4><div style="overflow-x:auto"><table><thead><tr><th>No</th><th>Indikator</th><th>Level</th><th>Bentuk</th><th class="kc" style="text-align:right">Kunci</th></tr></thead><tbody>' +
-      h.soal.map(function(s, n){
+    var rk = Object.keys(hit).sort().map(function(c){ return c + ': ' + hit[c]; }).join(' · ');
+    html += '<div class="kisi"><h4>Kisi-kisi soal</h4><div style="overflow-x:auto"><table><thead><tr><th>No</th><th>Indikator</th><th>Level</th><th>Bentuk</th><th style="text-align:right">Kunci</th></tr></thead><tbody>' +
+      list.map(function(s, n){
+        var b = s.bahasa || o.bahasa || 'latin', rtl = b !== 'latin';
         return '<tr><td>' + (n + 1) + '</td><td>' + esc(s.indikator || '—') + '</td><td>' + blTag(s.bloom) + '</td><td>' +
           esc(Soal.JENIS_NAMA[s.jenis] || s.jenis) + '</td><td class="k" dir="' + (rtl ? 'rtl' : 'ltr') + '" style="text-align:right">' +
-          ($('sKunci').checked ? esc(sKunciTeks(s, b, rtl)) : '<span class="muted">(tersembunyi)</span>') + '</td></tr>';
+          (kunci ? esc(sKunciTeks(s, b, rtl)) : '<span class="muted">(tersembunyi)</span>') + '</td></tr>';
       }).join('') + '</tbody></table></div>' + (rk ? '<p class="rk">Sebaran level: ' + rk + '</p>' : '') + '</div>';
-    out.innerHTML = html;
+    return html;
   }
-  function soalTeks(){
-    var h = Soal.hasil; if (!h) return '';
-    var b = h.bahasa, rtl = b !== 'latin', kunci = $('sKunci').checked, ind = $('sInd').checked, L = [];
-    if (h.judul) L.push(sTulis(h.judul, b), '');
-    h.soal.forEach(function(s, n){
+  // Teks polos untuk disalin. o: { judul, bahasa, kunci, ind }
+  function sTeks(list, o){
+    o = o || {};
+    var L = [], jb = o.bahasa || 'latin';
+    if (o.judul) L.push(sTulis(o.judul, jb), '');
+    list.forEach(function(s, n){
+      var b = s.bahasa || jb, rtl = b !== 'latin';
       L.push((n + 1) + '. ' + sTulis(s.pertanyaan, b));
       if (s.jenis === 'pg') s.pilihan.forEach(function(p, i){ L.push('   ' + sLabel(i, rtl) + '. ' + sTulis(p, b)); });
       if (s.jenis === 'bs') L.push('   (' + sTulis('Benar', b) + ' / ' + sTulis('Salah', b) + ')');
       L.push('');
     });
-    if (ind) {
+    if (o.ind) {
       L.push('KISI-KISI SOAL');
-      h.soal.forEach(function(s, n){
+      list.forEach(function(s, n){
         L.push((n + 1) + '. [' + (s.bloom ? s.bloom + ' ' + Soal.BLOOM[s.bloom] : '-') + ' | ' + (Soal.JENIS_NAMA[s.jenis] || s.jenis) + '] ' + (s.indikator || ''));
       });
       L.push('');
     }
-    if (kunci) {
-      L.push(sTulis('Kunci jawaban', b) + ':');
-      h.soal.forEach(function(s, n){
-        L.push((n + 1) + '. ' + sKunciTeks(s, b, rtl) + (s.pembahasan ? ' — ' + sTulis(s.pembahasan, b) : ''));
+    if (o.kunci) {
+      L.push(sTulis('Kunci jawaban', jb) + ':');
+      list.forEach(function(s, n){
+        var b = s.bahasa || jb;
+        L.push((n + 1) + '. ' + sKunciTeks(s, b, b !== 'latin') + (s.pembahasan ? ' — ' + sTulis(s.pembahasan, b) : ''));
       });
     }
     return L.join('\n').trim();
   }
+
+  /* ---- Hasil Buat Soal: centang lalu masukkan ke Bank Soal ---- */
+  Soal.pilih = {};
+  function sPickUi(){
+    var h = Soal.hasil, belum = h ? h.soal.filter(function(s){ return !s._bank; }).length : 0;
+    var n = Object.keys(Soal.pilih).length;
+    $('sPickBar').style.display = h && h.soal.length ? '' : 'none';
+    $('sSaveBank').disabled = !n;
+    $('sSaveBank').textContent = n ? 'Masukkan ' + n + ' soal ke Bank Soal' : 'Masukkan ke Bank Soal';
+    $('sPickAll').textContent = n && n === belum ? 'Batal pilih' : 'Pilih semua';
+    $('sPickAll').disabled = !belum;
+  }
+  function renderSoal(){
+    var out = $('sOut'), h = Soal.hasil;
+    if (!h || !h.soal || !h.soal.length) { sPickUi(); return; }
+    out.classList.remove('rtl');
+    out.classList.toggle('kunci', $('sKunci').checked);
+    out.classList.toggle('no-ind', !$('sInd').checked);
+    out.innerHTML = sRender(h.soal, { judul: h.judul, bahasa: h.bahasa, kunci: $('sKunci').checked, pick: 'buat', dipilih: Soal.pilih });
+    sPickUi();
+  }
+  function soalTeks(){
+    var h = Soal.hasil; if (!h) return '';
+    return sTeks(h.soal, { judul: h.judul, bahasa: h.bahasa, kunci: $('sKunci').checked, ind: $('sInd').checked });
+  }
+  function simpanHasil(){ try { store.set('pegon-soal-hasil', JSON.stringify(Soal.hasil)); } catch(e){} }
+  $('sOut').addEventListener('change', function(e){
+    var c = e.target; if (!c.matches('label.pick input')) return;
+    if (c.checked) Soal.pilih[c.dataset.k] = 1; else delete Soal.pilih[c.dataset.k];
+    c.closest('li').classList.toggle('on', c.checked); sPickUi();
+  });
+  $('sPickAll').addEventListener('click', function(){
+    var h = Soal.hasil; if (!h) return;
+    var belum = []; h.soal.forEach(function(s, i){ if (!s._bank) belum.push(String(i)); });
+    var semua = belum.every(function(k){ return Soal.pilih[k]; });
+    Soal.pilih = {}; if (!semua) belum.forEach(function(k){ Soal.pilih[k] = 1; });
+    renderSoal();
+  });
+  $('sSaveBank').addEventListener('click', function(){
+    var h = Soal.hasil; if (!h) return;
+    var idx = Object.keys(Soal.pilih).map(Number).filter(function(i){ return h.soal[i] && !h.soal[i]._bank; }).sort(function(a, b){ return a - b; });
+    if (!idx.length) { toast('Centang dulu soal yang mau dimasukkan'); return; }
+    var items = idx.map(function(i){ return keBank(h.soal[i], h.bahasa, h.judul); });
+    var btn = $('sSaveBank'); btn.disabled = true; btn.textContent = 'Menyimpan…';
+    call('simpanSoal', [items, h.ibarat || $('sIbarat').value]).then(function(d){
+      var r = d.simpan || { ids: [], ditambah: 0, sudahAda: 0 };
+      idx.forEach(function(i, j){ if (r.ids[j]) h.soal[i]._bank = r.ids[j]; });
+      Soal.pilih = {}; simpanHasil(); Bank.terima(d.soal);
+      renderSoal();
+      toast(r.ditambah + ' soal masuk Bank Soal' + (r.sudahAda ? ', ' + r.sudahAda + ' sudah ada sebelumnya' : ''));
+    }, function(err){
+      sPickUi();
+      toast('Gagal menyimpan: ' + ((err && err.message) || 'periksa koneksi'));
+      if (/Perintah tidak dikenal/.test((err && err.message) || '')) toast('Server belum diperbarui. Pasang Code.gs versi baru.');
+    });
+  });
+
+  /* ---- Soal -> bentuk yang disimpan di Bank Soal (Pegon untuk soal Pegon, Latin aslinya disimpan juga) ---- */
+  function modePegon(b){ return b === 'pegon' || b === 'jawa'; }
+  function keBank(s, b, materi){
+    var o = { materi: materi || '', jenis: s.jenis, bloom: s.bloom, indikator: s.indikator, pertanyaan: s.pertanyaan,
+      pilihan: (s.pilihan || []).slice(), jawaban: s.jawaban, pembahasan: s.pembahasan, bahasa: b };
+    if (o.jenis === 'pg') { var k = sIndexJawaban(s); if (k >= 0) o.jawaban = 'ABCDEF'.charAt(k); }
+    if (!modePegon(b)) return o;
+    o.latin = { materi: o.materi, pertanyaan: o.pertanyaan, pilihan: o.pilihan.slice(), jawaban: o.jawaban, pembahasan: o.pembahasan || '' };
+    var T = function(t){ return sTulis(t, b); };
+    o.materi = T(o.materi); o.pertanyaan = T(o.pertanyaan); o.pilihan = o.pilihan.map(T); o.pembahasan = T(o.pembahasan);
+    if (o.jenis !== 'pg') o.jawaban = T(o.jawaban);
+    return o;
+  }
+  // soal Pegon dari versi sebelumnya masih tersimpan dalam huruf Latin
+  function soalLama(s){ return modePegon(s.bahasa) && !s.latin && /[A-Za-z]/.test(s.pertanyaan); }
+
+  /* ================= Ubah soal di Bank Soal ================= */
+  var Ed = { s: null, b: 'latin', d: null };
+  function edNilai(stored, src){
+    stored = String(stored || '');
+    if (!modePegon(Ed.b)) return { lat: '', peg: stored };
+    var lat = src != null ? String(src) : (/[A-Za-z]/.test(stored) ? stored : '');
+    return { lat: lat, peg: sTulis(stored, Ed.b) };
+  }
+  function bukaUbah(id){
+    var s = Bank.list.filter(function(x){ return x.id === id; })[0]; if (!s) return;
+    var L = s.latin || {}, b = s.bahasa || 'latin';
+    Ed.s = s; Ed.b = b;
+    var benar = s.jenis === 'pg' ? sIndexJawaban(s) : -1;
+    var bsSalah = /salah/i.test(s.jawaban) || s.jawaban === sTulis('Salah', b);
+    Ed.d = {
+      jenis: s.jenis, bloom: s.bloom, indikator: s.indikator || '',
+      materi: edNilai(s.materi, L.materi), pertanyaan: edNilai(s.pertanyaan, L.pertanyaan),
+      pembahasan: edNilai(s.pembahasan, L.pembahasan),
+      jawaban: edNilai(s.jenis === 'pg' || s.jenis === 'bs' ? '' : s.jawaban, s.jenis === 'pg' || s.jenis === 'bs' ? '' : L.jawaban),
+      pilihan: (s.pilihan.length ? s.pilihan : ['', '', '', '']).map(function(p, i){ return edNilai(p, L.pilihan ? L.pilihan[i] : null); }),
+      benar: benar >= 0 ? benar : 0, bs: bsSalah ? 'Salah' : 'Benar'
+    };
+    renderUbah();
+    $('mEdit').hidden = false;
+  }
+  function edFld(key, label, multi, ph){
+    var v = key.indexOf('pil:') === 0 ? Ed.d.pilihan[+key.slice(4)] : Ed.d[key];
+    var tag = multi ? 'textarea' : 'input';
+    function el(part, val, extra){ return '<' + tag + ' class="inp' + extra + '" data-k="' + key + '" data-p="' + part + '"' +
+      (multi ? ' rows="2">' + esc(val) + '</textarea>' : ' value="' + esc(val) + '">'); }
+    var body;
+    if (modePegon(Ed.b)) body = '<div class="pair">' + el('lat', v.lat, '" placeholder="' + esc(ph || 'Ketik huruf Latin…') + '" dir="ltr') +
+      el('peg', v.peg, ' ar" dir="rtl') + '</div>';
+    else body = el('peg', v.peg, Ed.b === 'arab' ? ' ar" dir="rtl' : '" dir="ltr');
+    return label ? '<div class="ef"><label>' + label + '</label>' + body + '</div>' : body;
+  }
+  function renderUbah(){
+    var d = Ed.d, pg = modePegon(Ed.b), rtl = Ed.b !== 'latin', html = '';
+    html += '<div class="ef-row">' +
+      '<div class="ef"><label>Bentuk soal</label><select class="inp" id="eJenis">' +
+        [['pg','Pilihan ganda'],['melengkapi','Melengkapi (maks. 2 kata)'],['esai','Esai (min. 3 kata)'],['bs','Benar / Salah']].map(function(o){
+          return '<option value="' + o[0] + '"' + (d.jenis === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div>' +
+      '<div class="ef"><label>Taksonomi Bloom</label><select class="inp" id="eBloom"><option value="">—</option>' +
+        Object.keys(Soal.BLOOM).map(function(c){ return '<option value="' + c + '"' + (d.bloom === c ? ' selected' : '') + '>' + c + ' ' + Soal.BLOOM[c] + '</option>'; }).join('') + '</select></div>' +
+      '</div>';
+    html += edFld('materi', 'Materi', false);
+    html += '<div class="ef"><label>Indikator</label><textarea class="inp" id="eInd" rows="2" placeholder="Peserta didik dapat …">' + esc(d.indikator) + '</textarea></div>';
+    html += edFld('pertanyaan', 'Pertanyaan', true);
+    if (d.jenis === 'pg') {
+      html += '<div class="ef"><label>Pilihan jawaban · tandai yang benar</label>' + d.pilihan.map(function(p, i){
+        return '<div class="po"><label class="po-b" title="Jawaban benar"><input type="radio" name="eBenar" value="' + i + '"' + (d.benar === i ? ' checked' : '') + '><b>' + sLabel(i, rtl) + '</b></label>' +
+          edFld('pil:' + i, '', false) + (d.pilihan.length > 2 ? '<button type="button" class="mini" data-a="e-del" data-i="' + i + '" title="Hapus pilihan">×</button>' : '') + '</div>';
+      }).join('') + (d.pilihan.length < 4 ? '<button type="button" class="addrow" data-a="e-add">+ Tambah pilihan</button>' : '') + '</div>';
+    } else if (d.jenis === 'bs') {
+      html += '<div class="ef"><label>Kunci jawaban</label><select class="inp" id="eBs"><option value="Benar"' + (d.bs === 'Benar' ? ' selected' : '') + '>Benar</option><option value="Salah"' + (d.bs === 'Salah' ? ' selected' : '') + '>Salah</option></select></div>';
+    } else {
+      html += edFld('jawaban', 'Kunci jawaban' + (d.jenis === 'melengkapi' ? ' (maks. 2 kata)' : ' (min. 3 kata)'), d.jenis === 'esai');
+      html += '<p class="err" id="eWarn" style="margin-top:-4px"></p>';
+    }
+    html += edFld('pembahasan', 'Pembahasan', true);
+    $('eBody').innerHTML = html;
+    $('eHint').textContent = pg ? 'Ketik di kotak kiri (Latin), tulisan Pegon di kanan terisi otomatis. Pegon juga bisa diperbaiki langsung.' : '';
+    cekJawabUbah();
+  }
+  function jumlahKata(t){ return String(t || '').trim().split(/\s+/).filter(String).length; }
+  function cekJawabUbah(){
+    var w = $('eWarn'); if (!w) return;
+    var d = Ed.d, v = modePegon(Ed.b) ? (d.jawaban.lat || d.jawaban.peg) : d.jawaban.peg, n = jumlahKata(v);
+    w.textContent = d.jenis === 'melengkapi' && n > 2 ? 'Jawaban melengkapi sebaiknya maksimal 2 kata (sekarang ' + n + ').'
+      : d.jenis === 'esai' && n && n < 3 ? 'Kunci jawaban esai sebaiknya minimal 3 kata (sekarang ' + n + ').' : '';
+  }
+  $('eBody').addEventListener('input', function(e){
+    var t = e.target, k = t.dataset.k;
+    if (t.id === 'eInd') { Ed.d.indikator = t.value; return; }
+    if (!k) return;
+    var v = k.indexOf('pil:') === 0 ? Ed.d.pilihan[+k.slice(4)] : Ed.d[k];
+    v[t.dataset.p] = t.value;
+    if (t.dataset.p === 'lat') {
+      v.peg = sTulis(t.value, Ed.b);
+      var peg = t.parentNode.querySelector('[data-p="peg"]'); if (peg) peg.value = v.peg;
+    }
+    if (k === 'jawaban') cekJawabUbah();
+  });
+  $('eBody').addEventListener('change', function(e){
+    var t = e.target;
+    if (t.id === 'eJenis') {
+      Ed.d.jenis = t.value;
+      if (t.value === 'pg' && Ed.d.pilihan.filter(function(p){ return p.peg || p.lat; }).length < 2) Ed.d.pilihan = [0,1,2,3].map(function(){ return { lat: '', peg: '' }; });
+      renderUbah();
+    } else if (t.id === 'eBloom') Ed.d.bloom = t.value;
+    else if (t.id === 'eBs') Ed.d.bs = t.value;
+    else if (t.name === 'eBenar') Ed.d.benar = +t.value;
+  });
+  $('eBody').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.a === 'e-add') { Ed.d.pilihan.push({ lat: '', peg: '' }); renderUbah(); }
+    else if (b.dataset.a === 'e-del') {
+      var i = +b.dataset.i; Ed.d.pilihan.splice(i, 1);
+      if (Ed.d.benar === i) Ed.d.benar = 0; else if (Ed.d.benar > i) Ed.d.benar--;
+      renderUbah();
+    }
+  });
+  function tutupUbah(){ $('mEdit').hidden = true; Ed.s = null; }
+  $('eCancel').addEventListener('click', tutupUbah);
+  $('mEdit').addEventListener('click', function(e){ if (e.target === this) tutupUbah(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('mEdit').hidden) tutupUbah(); });
+  $('fEdit').addEventListener('submit', function(e){
+    e.preventDefault();
+    var d = Ed.d, b = Ed.b, pg = modePegon(b), s = Ed.s;
+    var tanya = d.pertanyaan.peg.trim();
+    if (!tanya) { toast('Pertanyaan tidak boleh kosong'); return; }
+    var pil = [], pilLat = [], benar = -1;
+    if (d.jenis === 'pg') {
+      d.pilihan.forEach(function(p, i){ if (p.peg.trim()) { if (i === d.benar) benar = pil.length; pil.push(p.peg.trim()); pilLat.push(p.lat.trim()); } });
+      if (pil.length < 2) { toast('Isi minimal 2 pilihan jawaban'); return; }
+      if (benar < 0) { toast('Tandai satu pilihan yang benar'); return; }
+    }
+    var jawab = d.jenis === 'pg' ? 'ABCDEF'.charAt(benar) : d.jenis === 'bs' ? (pg ? sTulis(d.bs, b) : d.bs) : d.jawaban.peg.trim();
+    var item = { id: s.id, materi: d.materi.peg.trim(), jenis: d.jenis, bloom: d.bloom, indikator: d.indikator.trim(),
+      pertanyaan: tanya, pilihan: pil, jawaban: jawab, pembahasan: d.pembahasan.peg.trim(), bahasa: b };
+    if (pg) item.latin = { materi: d.materi.lat.trim(), pertanyaan: d.pertanyaan.lat.trim(), pilihan: pilLat,
+      jawaban: d.jenis === 'pg' ? jawab : d.jenis === 'bs' ? d.bs : d.jawaban.lat.trim(), pembahasan: d.pembahasan.lat.trim() };
+    var btn = $('eSave'); btn.disabled = true; btn.textContent = 'Menyimpan…';
+    call('ubahSoal', [[item]]).then(function(r){
+      btn.disabled = false; btn.textContent = 'Simpan perubahan';
+      tutupUbah(); Bank.terima(r.soal); toast('Soal diperbarui');
+    }, function(err){
+      btn.disabled = false; btn.textContent = 'Simpan perubahan';
+      toast('Gagal menyimpan: ' + ((err && err.message) || 'periksa koneksi'));
+    });
+  });
+  // ubah soal Pegon lama (masih Latin di Spreadsheet) menjadi tulisan Pegon
+  $('bUpgrade').addEventListener('click', function(){
+    var lama = Bank.list.filter(soalLama); if (!lama.length) return;
+    var btn = this; btn.disabled = true; btn.textContent = 'Mengubah ' + lama.length + ' soal…';
+    var items = lama.map(function(s){ var o = keBank(s, s.bahasa, s.materi); o.id = s.id; return o; });
+    call('ubahSoal', [items]).then(function(r){ btn.disabled = false; Bank.terima(r.soal); toast(r.diubah + ' soal kini bertulisan Pegon di Spreadsheet'); },
+      function(err){ btn.disabled = false; renderBank(); toast('Gagal: ' + ((err && err.message) || 'periksa koneksi')); });
+  });
+
+  /* ================= Bank Soal ================= */
+  var Bank = {
+    list: [], loaded: false, busy: false, pilih: {}, konfirmHapus: false,
+    terima: function(list){
+      this.list = list || []; this.loaded = true;
+      var ada = {}; this.list.forEach(function(s){ ada[s.id] = 1; });
+      Object.keys(this.pilih).forEach(function(k){ if (!ada[k]) delete Bank.pilih[k]; });
+      $('navSoal').textContent = this.list.length;
+      $('bStatus').className = 'status ' + (SERVER ? 'online' : 'warn');
+      $('bStatus').textContent = SERVER ? '☁ Tersimpan di Spreadsheet' : 'Mode uji · hanya di browser ini';
+      renderBank();
+    },
+    load: function(){
+      if (this.busy) return;
+      var self = this; this.busy = true;
+      if (!this.loaded) $('bStatus').textContent = 'Memuat…';
+      call('getSoal').then(function(list){ self.busy = false; self.terima(list); }, function(err){
+        self.busy = false; $('bStatus').className = 'status warn'; $('bStatus').textContent = 'Belum termuat';
+        if (!self.loaded) $('bOut').innerHTML = '<p class="note" style="padding:24px 16px;text-align:center;color:var(--warn);font-weight:600">' +
+          esc(/Perintah tidak dikenal/.test((err && err.message) || '') ? 'Server belum diperbarui. Admin perlu memasang Code.gs versi baru.' : ((err && err.message) || 'Bank soal belum termuat')) + '</p>';
+      });
+    },
+    tampil: function(){
+      var q = $('bCari').value.trim().toLowerCase(), m = $('bMateri').value, bl = $('bBloom').value, j = $('bJenis').value;
+      return this.list.filter(function(s){
+        if (m && s.materi !== m) return false;
+        if (j && s.jenis !== j) return false;
+        if (bl === 'LOTS' && !/^C[123]$/.test(s.bloom)) return false;
+        if (bl === 'HOTS' && !/^C[456]$/.test(s.bloom)) return false;
+        if (/^C\d$/.test(bl) && s.bloom !== bl) return false;
+        if (q && [s.pertanyaan, s.indikator, s.materi, s.jawaban, (s.pilihan || []).join(' '), s.latin ? JSON.stringify(s.latin) : ''].join(' ').toLowerCase().indexOf(q) < 0) return false;
+        return true;
+      });
+    },
+    terpilih: function(){ var p = this.pilih; return this.list.filter(function(s){ return p[s.id]; }); }
+  };
+  function renderBank(){
+    // daftar materi untuk saringan
+    var sel = $('bMateri'), cur = sel.value, materi = [];
+    Bank.list.forEach(function(s){ if (s.materi && materi.indexOf(s.materi) < 0) materi.push(s.materi); });
+    materi.sort(function(a, b){ return a.localeCompare(b, 'id'); });
+    sel.innerHTML = '<option value="">Semua materi</option>' + materi.map(function(x){ return '<option value="' + esc(x) + '">' + esc(x) + '</option>'; }).join('');
+    if (materi.indexOf(cur) >= 0) sel.value = cur;
+    var shown = Bank.tampil(), out = $('bOut'), n = Object.keys(Bank.pilih).length;
+    $('bCount').textContent = (shown.length !== Bank.list.length ? shown.length + ' dari ' : '') + Bank.list.length + ' soal';
+    $('bPicked').textContent = n ? n + ' soal dipilih' : 'Belum ada yang dipilih';
+    $('bPicked').className = n ? '' : 'muted';
+    var semua = shown.length && shown.every(function(s){ return Bank.pilih[s.id]; });
+    $('bPickAll').textContent = semua ? 'Batal pilih' : 'Pilih semua' + (shown.length !== Bank.list.length ? ' yang tampil' : '');
+    $('bPickAll').disabled = !shown.length;
+    $('bDel').disabled = !n;
+    $('bDel').textContent = Bank.konfirmHapus && n ? 'Yakin hapus ' + n + ' soal?' : 'Hapus' + (n ? ' (' + n + ')' : '');
+    $('bCopy').textContent = n ? 'Salin (' + n + ')' : 'Salin';
+    var nLama = Bank.list.filter(soalLama).length;
+    $('bUpgrade').style.display = nLama ? '' : 'none';
+    $('bUpgrade').textContent = 'Tulis ' + nLama + ' soal lama dalam Pegon di Spreadsheet';
+    $('bPrintBtn').textContent = n ? 'Cetak (' + n + ')' : 'Cetak';
+    out.classList.toggle('kunci', $('bKunci').checked);
+    out.classList.toggle('no-ind', !$('bInd').checked);
+    if (!Bank.list.length) { out.innerHTML = '<p class="note" style="padding:24px 16px;text-align:center">Bank soal masih kosong. Buat soal di menu <b>Buat Soal</b>, centang yang bagus, lalu tekan <b>Masukkan ke Bank Soal</b>.</p>'; return; }
+    if (!shown.length) { out.innerHTML = '<p class="note" style="padding:24px 16px;text-align:center">Tidak ada soal yang cocok dengan saringan.</p>'; return; }
+    out.innerHTML = sRender(shown, { kunci: $('bKunci').checked, pick: 'bank', dipilih: Bank.pilih, kunciPilih: function(s){ return s.id; } });
+  }
+  ['bCari','bMateri','bBloom','bJenis'].forEach(function(id){ $(id).addEventListener(id === 'bCari' ? 'input' : 'change', function(){ Bank.konfirmHapus = false; renderBank(); }); });
+  ['bKunci','bInd'].forEach(function(id){ $(id).addEventListener('change', renderBank); });
+  $('bOut').addEventListener('click', function(e){ var b = e.target.closest('[data-ed]'); if (b) bukaUbah(b.dataset.ed); });
+  $('bOut').addEventListener('change', function(e){
+    var c = e.target; if (!c.matches('label.pick input')) return;
+    if (c.checked) Bank.pilih[c.dataset.k] = 1; else delete Bank.pilih[c.dataset.k];
+    Bank.konfirmHapus = false;
+    c.closest('li').classList.toggle('on', c.checked);
+    renderBank();
+  });
+  $('bPickAll').addEventListener('click', function(){
+    var shown = Bank.tampil(), semua = shown.every(function(s){ return Bank.pilih[s.id]; });
+    shown.forEach(function(s){ if (semua) delete Bank.pilih[s.id]; else Bank.pilih[s.id] = 1; });
+    Bank.konfirmHapus = false; renderBank();
+  });
+  // yang dikerjakan: soal terpilih, atau semua yang tampil bila belum ada yang dipilih
+  function bankSasaran(){ var t = Bank.terpilih(); return t.length ? t : Bank.tampil(); }
+  $('bCopy').addEventListener('click', function(){
+    var list = bankSasaran(); if (!list.length) { toast('Belum ada soal'); return; }
+    copyText(sTeks(list, { kunci: $('bKunci').checked, ind: $('bInd').checked }), list.length + ' soal disalin');
+  });
+  $('bPrintBtn').addEventListener('click', function(){
+    var list = bankSasaran(); if (!list.length) { toast('Belum ada soal'); return; }
+    var p = $('bPrint');
+    p.className = 'soal-out' + ($('bKunci').checked ? ' kunci' : '') + ($('bInd').checked ? '' : ' no-ind');
+    p.innerHTML = sRender(list, { kunci: $('bKunci').checked });
+    document.body.classList.add('print-bank');
+    setTimeout(function(){ window.print(); }, 50);
+  });
+  window.addEventListener('afterprint', function(){ document.body.classList.remove('print-bank'); });
+  $('bDel').addEventListener('click', function(){
+    var ids = Object.keys(Bank.pilih); if (!ids.length) return;
+    if (!Bank.konfirmHapus) { Bank.konfirmHapus = true; renderBank(); return; }
+    Bank.konfirmHapus = false;
+    var btn = $('bDel'); btn.disabled = true; btn.textContent = 'Menghapus…';
+    call('hapusSoal', [ids]).then(function(d){
+      Bank.pilih = {}; Bank.terima(d.soal); toast(ids.length + ' soal dihapus dari Bank Soal');
+      // tandai ulang di hasil Buat Soal
+      if (Soal.hasil) { var del = {}; ids.forEach(function(x){ del[x] = 1; }); Soal.hasil.soal.forEach(function(s){ if (del[s._bank]) delete s._bank; }); simpanHasil(); renderSoal(); }
+    }, function(err){ renderBank(); toast('Gagal menghapus: ' + ((err && err.message) || 'periksa koneksi')); });
+  });
   function sLen(){ $('sLen').textContent = $('sIbarat').value.length + ' huruf'; store.set('pegon-ibarat', $('sIbarat').value); }
   $('sIbarat').addEventListener('input', sLen);
   // Voice Note untuk ibarat: pilih bahasa yang diucapkan
@@ -2482,7 +2928,7 @@ var PegonEngine = (function () {
     call('buatSoal', [ib, { jumlah: $('sJumlah').value, model: $('sModel').value, bloom: bl, bahasa: $('sBahasa').value,
       catatan: $('sCatatan').value.trim() }]).then(function(d){
       btn.disabled = false; $('sGoLabel').textContent = 'Buat Soal';
-      Soal.hasil = d; store.set('pegon-soal-hasil', JSON.stringify(d)); renderSoal();
+      Soal.hasil = d; d.ibarat = ib; Soal.pilih = {}; simpanHasil(); renderSoal();
       toast(d.soal.length + ' soal dibuat');
       setSStatus('online', '✦ AI siap');
     }, function(err){
@@ -2565,7 +3011,8 @@ var PegonEngine = (function () {
   /* ================= Navigasi & tanggal ================= */
   function route(force){
     var v = force || (location.hash || '#tulis').slice(1);
-    if (['tulis','kamus','soal','pedoman'].indexOf(v) < 0) v = 'tulis';
+    if (['tulis','kamus','soal','bank','pedoman'].indexOf(v) < 0) v = 'tulis';
+    if (v === 'bank') Bank.load();
     if (v === 'pedoman' && !Role.admin) {
       if (force === 'pedoman' || location.hash === '#pedoman') toast('Menu Pedoman SOP khusus Admin');
       v = 'tulis';
