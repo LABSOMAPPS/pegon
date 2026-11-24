@@ -1053,6 +1053,9 @@
   #sIbarat { font-family: 'Plus Jakarta Sans', var(--ar); font-size: 16px; line-height: 1.8; min-height: 200px; }
   #sIbarat:dir(rtl) { font-family: var(--ar); font-size: 24px; line-height: 2; }
   .soal-opts { gap: 10px 16px; }
+  select.mic-lang { display: none; font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 8px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: #fff; color: var(--ink-2); cursor: pointer; }
+  .mic.ready ~ select.mic-lang, select.mic-lang.ready { display: inline-block; }
+  #sListen i { font-family: var(--ar); font-size: 20px; }
   label.sw { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; }
   .soal-out { padding: 6px 18px 18px; }
   .soal-out h3.sj { margin: 12px 0 4px; font-size: 18px; color: var(--teal); }
@@ -1417,6 +1420,16 @@
       </div>
       <div class="btns">
         <span class="status" id="sStatus">Memeriksa AI…</span>
+        <select id="sMicLang" class="mic-lang" title="Bahasa yang diucapkan">
+          <option value="ar-SA">Arab</option>
+          <option value="id-ID">Indonesia</option>
+          <option value="jv-ID">Jawa</option>
+        </select>
+        <button class="mic" id="sMic" type="button" title="Ucapkan ibarat, akan ditulis otomatis">
+          <span class="dot"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          <span id="sMicLabel">Voice Note</span>
+        </button>
         <button type="button" id="sPaste">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
           <span>Tempel</span>
@@ -1425,7 +1438,8 @@
       </div>
     </div>
     <textarea id="sIbarat" dir="auto" spellcheck="false" maxlength="8000"
-      placeholder="Tulis atau tempel ibarat di sini, mis. dari kitab Fathul Qarib:&#10;فصل: وشرائط وجوب الصلاة ثلاثة أشياء: الإسلام، والبلوغ، والعقل…"></textarea>
+      placeholder="Tulis, tempel, atau ucapkan ibarat di sini, mis. dari kitab Fathul Qarib:&#10;فصل: وشرائط وجوب الصلاة ثلاثة أشياء: الإسلام، والبلوغ، والعقل…"></textarea>
+    <div class="listen" id="sListen"><b>● Mendengarkan…</b> <i id="sPartial"></i></div>
     <div class="opts soal-opts" style="border-top:1px solid var(--line)">
       <label>Model soal
         <select id="sModel">
@@ -2062,47 +2076,56 @@ var PegonEngine = (function () {
   });
 
   /* ================= Voice Note (pengenalan suara browser) ================= */
+  // Satu fungsi untuk semua tombol Voice Note. Hanya satu mikrofon yang aktif dalam satu waktu.
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  var rec = null, listening = false;
-  if (SR) $('btnMic').classList.add('ready');
-  function micUi(on){
-    listening = on;
-    $('btnMic').classList.toggle('live', on);
-    $('micLabel').textContent = on ? 'Berhenti' : 'Voice Note';
-    $('listen').classList.toggle('on', on);
-    if (!on) $('partial').textContent = '';
-  }
-  $('btnMic').addEventListener('click', function(){
+  var Mic = { rec: null, aktif: null };
+  function pasangMic(c){
+    // c: { btn, label, listen, partial, ta, lang(), onText() }
     if (!SR) return;
-    if (listening && rec) { rec.stop(); return; }
-    rec = new SR();
-    rec.lang = 'id-ID'; rec.continuous = true; rec.interimResults = true;
-    rec.onresult = function(ev){
-      var finalText = '', interim = '';
-      for (var i = ev.resultIndex; i < ev.results.length; i++) {
-        if (ev.results[i].isFinal) finalText += ev.results[i][0].transcript;
-        else interim += ev.results[i][0].transcript;
-      }
-      if (finalText) {
-        var ta = $('latin');
-        ta.value = (ta.value.trim() ? ta.value.replace(/\s*$/, ' ') : '') + finalText.trim();
-        run();
-      }
-      $('partial').textContent = interim;
-    };
-    rec.onerror = function(ev){
-      if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'audio-capture') {
-        toast('Izin mikrofon ditolak. Izinkan mikrofon untuk situs ini di pengaturan browser, atau pakai tombol mikrofon pada keyboard HP.');
-      } else if (ev.error === 'network') {
-        toast('Voice Note butuh koneksi internet yang stabil');
-      } else if (ev.error !== 'no-speech' && ev.error !== 'aborted') {
-        toast('Voice Note berhenti: ' + ev.error);
-      }
-    };
-    rec.onend = function(){ micUi(false); };
-    try { rec.start(); micUi(true); }
-    catch(e){ toast('Voice Note tidak bisa dimulai di browser ini'); micUi(false); }
-  });
+    $(c.btn).classList.add('ready');
+    function ui(on){
+      $(c.btn).classList.toggle('live', on);
+      $(c.label).textContent = on ? 'Berhenti' : 'Voice Note';
+      $(c.listen).classList.toggle('on', on);
+      if (!on) $(c.partial).textContent = '';
+    }
+    $(c.btn).addEventListener('click', function(){
+      if (Mic.rec && Mic.aktif === c.btn) { Mic.rec.stop(); return; }
+      if (Mic.rec) { try { Mic.rec.abort(); } catch(e){} }
+      var rec = new SR(), lang = c.lang();
+      rec.lang = lang; rec.continuous = true; rec.interimResults = true;
+      $(c.partial).dir = /^ar/.test(lang) ? 'rtl' : 'ltr';
+      rec.onresult = function(ev){
+        var finalText = '', interim = '';
+        for (var i = ev.resultIndex; i < ev.results.length; i++) {
+          if (ev.results[i].isFinal) finalText += ev.results[i][0].transcript;
+          else interim += ev.results[i][0].transcript;
+        }
+        if (finalText) {
+          var ta = $(c.ta);
+          ta.value = (ta.value.trim() ? ta.value.replace(/\s*$/, ' ') : '') + finalText.trim();
+          c.onText();
+        }
+        $(c.partial).textContent = interim;
+      };
+      rec.onerror = function(ev){
+        if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'audio-capture') {
+          toast('Izin mikrofon ditolak. Izinkan mikrofon untuk situs ini di pengaturan browser, atau pakai tombol mikrofon pada keyboard HP.');
+        } else if (ev.error === 'network') {
+          toast('Voice Note butuh koneksi internet yang stabil');
+        } else if (ev.error === 'language-not-supported') {
+          toast('Bahasa ini belum didukung pengenalan suara di browser ini. Coba Chrome terbaru.');
+        } else if (ev.error !== 'no-speech' && ev.error !== 'aborted') {
+          toast('Voice Note berhenti: ' + ev.error);
+        }
+      };
+      rec.onend = function(){ if (Mic.rec === rec) { Mic.rec = null; Mic.aktif = null; } ui(false); };
+      try { rec.start(); Mic.rec = rec; Mic.aktif = c.btn; ui(true); }
+      catch(e){ toast('Voice Note tidak bisa dimulai di browser ini'); ui(false); }
+    });
+  }
+  pasangMic({ btn: 'btnMic', label: 'micLabel', listen: 'listen', partial: 'partial', ta: 'latin',
+    lang: function(){ return 'id-ID'; }, onText: function(){ run(); } });
 
   /* ================= Halaman Kamus ================= */
   var editing = null, confirmDel = null;
@@ -2414,6 +2437,14 @@ var PegonEngine = (function () {
   }
   function sLen(){ $('sLen').textContent = $('sIbarat').value.length + ' huruf'; store.set('pegon-ibarat', $('sIbarat').value); }
   $('sIbarat').addEventListener('input', sLen);
+  // Voice Note untuk ibarat: pilih bahasa yang diucapkan
+  (function(){
+    var v = store.get('pegon-soal-miclang'); if (v && $('sMicLang').querySelector('option[value="' + v + '"]')) $('sMicLang').value = v;
+    $('sMicLang').addEventListener('change', function(){ store.set('pegon-soal-miclang', this.value); });
+    if (SR) $('sMicLang').classList.add('ready');
+    pasangMic({ btn: 'sMic', label: 'sMicLabel', listen: 'sListen', partial: 'sPartial', ta: 'sIbarat',
+      lang: function(){ return $('sMicLang').value; }, onText: sLen });
+  })();
   $('sClear').addEventListener('click', function(){ $('sIbarat').value = ''; sLen(); $('sIbarat').focus(); });
   $('sPaste').addEventListener('click', function(){
     if (!navigator.clipboard || !navigator.clipboard.readText) { $('sIbarat').focus(); toast('Tekan lama lalu pilih Tempel, atau Ctrl+V'); return; }
