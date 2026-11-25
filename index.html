@@ -959,6 +959,8 @@
 
   /* ================= Peran: Admin & Pengguna ================= */
   body:not(.is-admin) .admin-only { display: none !important; }
+  body:not(.is-resmi) .resmi-only { display: none !important; }
+  body:not(.is-pengurus) .pengurus-only { display: none !important; }
   .hero-side { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .role-btn {
     background: rgba(255, 255, 255, 0.18);
@@ -1157,6 +1159,45 @@
     .soal-out ol.sl > li::before { border: 1px solid #999; background: #fff; }
   }
 
+
+  /* ================= Akun, Materi, Pengguna ================= */
+  body.is-resmi .role-pill { background: #fef3c7; color: #92400e; }
+  #roleAct { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .src-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px dashed var(--line-strong); background: var(--surface-soft); font-size: 13px; }
+  .src-bar .src-l { font-weight: 600; color: var(--ink-2); }
+  .src-bar select.inp { width: auto; max-width: 260px; padding: 6px 10px; font-size: 13px; }
+  .src-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 11px; border-radius: 999px; background: var(--emerald-soft); color: #047857; font-weight: 700; font-size: 12.5px; }
+  .src-chip[hidden] { display: none; }
+  .src-chip button { padding: 0 7px; border-radius: 999px; font-size: 13px; line-height: 18px; border: 0; background: rgba(255,255,255,.7); }
+  .mat-grid { display: grid; grid-template-columns: 290px 1fr; gap: 18px; margin-top: 4px; align-items: start; }
+  @media (max-width: 860px) { .mat-grid { grid-template-columns: 1fr; } }
+  .kitab-list { padding: 10px; display: grid; gap: 6px; }
+  .kitab-list button { justify-content: space-between; width: 100%; text-align: left; padding: 10px 12px; border-radius: 12px; font-size: 14px; }
+  .kitab-list button.on { border-color: var(--cyan); background: #fffbeb; color: var(--sky); box-shadow: 0 0 0 2px rgba(217,119,6,.15); }
+  .kitab-list .n2 { font-size: 11.5px; font-weight: 700; color: var(--muted); background: var(--bg-2); border-radius: 999px; padding: 1px 8px; }
+  .mform { padding: 14px 16px 6px; border-bottom: 1px solid var(--line); background: #fffbeb; }
+  .mform[hidden] { display: none; }
+  .mf-row { display: grid; grid-template-columns: 1fr 130px; gap: 10px; }
+  #mIbarat { font-size: 15px; line-height: 1.8; min-height: 150px; }
+  #mIbarat:dir(rtl) { font-family: var(--ar); font-size: 22px; line-height: 2; }
+  .bab-row { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: start; padding: 12px 16px; border-bottom: 1px dashed var(--line); }
+  .bab-row:last-child { border-bottom: 0; }
+  .bab-row .no { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--sky-soft); color: var(--sky); font-weight: 800; font-size: 13px; }
+  .bab-row .jd { font-weight: 700; font-size: 15px; unicode-bidi: plaintext; }
+  .bab-row .pv { direction: rtl; text-align: right; font-family: var(--ar); font-size: 19px; line-height: 1.8; color: var(--ink-2); margin-top: 2px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; unicode-bidi: plaintext; }
+  .bab-row .ol { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .bab-row .acts button { padding: 5px 10px; font-size: 12px; }
+  .ef > label.sw { display: inline-flex; text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--ink-2); }
+  .uform { display: grid; grid-template-columns: 1.3fr 1fr .9fr 1fr auto auto; gap: 10px; padding: 14px 16px 4px; align-items: end; }
+  @media (max-width: 900px) { .uform { grid-template-columns: 1fr 1fr; } }
+  .tag.peran-admin { background: #fee2e2; color: #b91c1c; }
+  .tag.peran-pengurus { background: var(--violet-soft); color: var(--violet-ink); }
+  .tag.peran-anggota { background: var(--emerald-soft); color: #047857; }
+  tr.nonaktif td { opacity: .55; }
+  .soal-out .tag.src { background: var(--emerald-soft); color: #047857; }
+  .soal-out .tag.by { background: #f1f5f9; color: #475569; }
+
   /* ================= Toast ================= */
   .toast {
     position: fixed;
@@ -1225,12 +1266,12 @@
       </div>
       <div class="hero-side">
         <span class="badge" id="hijri" title="Kalender Hijriah Ummul Qura"></span>
-        <button type="button" class="role-btn" id="btnRole" title="Ganti peran">
+        <button type="button" class="role-btn" id="btnRole" title="Akun">
           <span class="role-pill" id="rolePill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span id="roleName">Pengguna</span>
+            <span id="roleName">Pengunjung</span>
           </span>
-          <span id="roleAct">Masuk Admin</span>
+          <span id="roleAct">Masuk</span>
         </button>
       </div>
     </div>
@@ -1245,18 +1286,26 @@
         <span>Kamus</span>
         <span class="n" id="navCount">0</span>
       </a>
-      <a href="#soal" data-v="soal">
+      <a href="#soal" data-v="soal" class="resmi-only">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
         <span>Buat Soal</span>
       </a>
-      <a href="#bank" data-v="bank">
+      <a href="#bank" data-v="bank" class="resmi-only">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
         <span>Soal</span>
         <span class="n" id="navSoal">0</span>
       </a>
+      <a href="#materi" data-v="materi" class="pengurus-only">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>
+        <span>Materi</span>
+      </a>
       <a href="#pedoman" data-v="pedoman" class="admin-only">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         <span>Pedoman SOP</span>
+      </a>
+      <a href="#pengguna" data-v="pengguna" class="admin-only">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Pengguna</span>
       </a>
     </nav>
   </div>
@@ -1478,6 +1527,12 @@
         <button type="button" id="sClear">Bersihkan</button>
       </div>
     </div>
+    <div class="src-bar" id="sSrcBar">
+      <span class="src-l">Ambil ibarat dari Materi:</span>
+      <select class="inp" id="sKitab"><option value="">Pilih kitab…</option></select>
+      <select class="inp" id="sBab" disabled><option value="">Pilih bab / fasal…</option></select>
+      <span class="src-chip" id="sSrcChip" hidden><span id="sSrcTxt"></span><button type="button" id="sSrcX" title="Lepaskan sumber">×</button></span>
+    </div>
     <textarea id="sIbarat" dir="auto" spellcheck="false" maxlength="8000"
       placeholder="Tulis, tempel, atau ucapkan ibarat di sini, mis. dari kitab Fathul Qarib:&#10;فصل: وشرائط وجوب الصلاة ثلاثة أشياء: الإسلام، والبلوغ، والعقل…"></textarea>
     <div class="listen" id="sListen"><b>● Mendengarkan…</b> <i id="sPartial"></i></div>
@@ -1577,6 +1632,8 @@
     <div class="toolbar">
       <input class="inp" id="bCari" placeholder="Cari soal, indikator, atau materi…">
       <select class="inp" id="bMateri" style="max-width:220px;padding:8px 10px;font-size:13px"><option value="">Semua materi</option></select>
+      <select class="inp" id="bKitab" style="max-width:200px;padding:8px 10px;font-size:13px"><option value="">Semua kitab</option></select>
+      <select class="inp pengurus-only" id="bPembuat" style="max-width:180px;padding:8px 10px;font-size:13px"><option value="">Semua pembuat</option></select>
       <select class="inp" id="bBloom" style="max-width:170px;padding:8px 10px;font-size:13px">
         <option value="">Semua level</option>
         <option value="LOTS">LOTS (C1–C3)</option><option value="HOTS">HOTS (C4–C6)</option>
@@ -1646,37 +1703,116 @@
     </div>
   </section>
 
-  <section class="card" style="margin-top:18px">
+</section>
+
+<!-- ============ MATERI (Pengurus & Admin) ============ -->
+<section class="view" id="view-materi">
+  <div class="mat-grid">
+    <section class="card">
+      <div class="card-h">
+        <div class="card-title">
+          <span class="ico-badge violet" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg></span>
+          <h2>Kitab</h2>
+        </div>
+        <button type="button" class="primary" id="mKitabBaru">+ Kitab baru</button>
+      </div>
+      <div id="mKitabList" class="kitab-list"></div>
+    </section>
+    <section class="card">
+      <div class="card-h">
+        <div class="card-title" id="mJudulBox">
+          <span class="ico-badge sky" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+          <h2 id="mJudul">Bab / Fasal</h2>
+        </div>
+        <div class="btns" id="mKitabAksi">
+          <span class="status" id="mStatus">Memuat…</span>
+          <button type="button" id="mRename">Ganti nama</button>
+          <button type="button" class="danger" id="mHapusKitab">Hapus kitab</button>
+          <button type="button" class="primary" id="mBabBaru">+ Tambah bab</button>
+        </div>
+      </div>
+      <form id="mForm" class="mform" autocomplete="off" hidden>
+        <div class="mf-row">
+          <div class="ef"><label for="mKitab">Kitab</label><input class="inp" id="mKitab" list="mKitabDL" maxlength="150" placeholder="mis. Fathul Qarib" required><datalist id="mKitabDL"></datalist></div>
+          <div class="ef"><label for="mUrutan">Urutan</label><input class="inp" id="mUrutan" type="number" min="0" max="9999" placeholder="otomatis"></div>
+        </div>
+        <div class="ef"><label for="mBab">Judul bab / fasal</label><input class="inp" id="mBab" dir="auto" maxlength="250" placeholder="mis. Fasal Fardhu Wudhu · فصل في فروض الوضوء" required></div>
+        <div class="ef">
+          <label for="mIbarat">Ibarat <span class="muted" id="mLen" style="text-transform:none;letter-spacing:0">0 / 8000 huruf</span></label>
+          <textarea class="inp" id="mIbarat" dir="auto" maxlength="8000" rows="7" placeholder="Tempel atau ucapkan ibarat bab ini…"></textarea>
+          <div class="listen" id="mListen"><b>● Mendengarkan…</b> <i id="mPartial"></i></div>
+        </div>
+        <div class="btns" style="justify-content:flex-end">
+          <button class="mic" id="mMic" type="button" title="Ucapkan ibarat (bahasa Arab)">
+          <span class="dot"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          <span id="mMicLabel">Voice Note</span>
+          </button>
+          <span class="sp" style="flex:1"></span>
+          <button type="button" id="mBatal">Batal</button>
+          <button type="submit" class="primary" id="mSimpan">Simpan bab</button>
+        </div>
+      </form>
+      <div id="mBabList"></div>
+    </section>
+  </div>
+</section>
+
+<!-- ============ PENGGUNA (Admin) ============ -->
+<section class="view" id="view-pengguna">
+  <section class="card" style="margin-top:4px">
     <div class="card-h">
       <div class="card-title">
-        <span class="ico-badge violet" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </span>
-        <h2>Ganti sandi admin</h2>
+        <span class="ico-badge violet" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <h2 id="uJudul">Tambah pengguna resmi</h2>
       </div>
+      <span class="status" id="uStatus">Memuat…</span>
     </div>
-    <form class="pw-grid" id="fPass" autocomplete="off">
-      <div><label for="pwOld">Sandi lama</label><input class="inp" type="password" id="pwOld" required></div>
-      <div><label for="pwNew">Sandi baru</label><input class="inp" type="password" id="pwNew" minlength="6" required></div>
-      <div><label for="pwNew2">Ulangi sandi baru</label><input class="inp" type="password" id="pwNew2" minlength="6" required></div>
-      <div class="btns"><button type="submit" class="primary" id="pwSave">Simpan sandi</button></div>
+    <form id="uForm" class="uform" autocomplete="off">
+      <div class="ef"><label for="uNama">Nama</label><input class="inp" id="uNama" maxlength="80" placeholder="mis. Ust. Ahmad" required></div>
+      <div class="ef"><label for="uUser">Username</label><input class="inp" id="uUser" maxlength="30" placeholder="mis. ahmad" autocapitalize="none" spellcheck="false" required></div>
+      <div class="ef"><label for="uPeran">Peran</label><select class="inp" id="uPeran"><option value="anggota">Anggota</option><option value="pengurus">Pengurus</option><option value="admin">Admin</option></select></div>
+      <div class="ef"><label for="uSandi">Sandi</label><input class="inp" id="uSandi" type="text" autocomplete="new-password" minlength="6" placeholder="min. 6 huruf"></div>
+      <div class="ef"><label>Status</label><label class="sw" style="padding-top:8px"><input type="checkbox" id="uAktif" checked> Aktif</label></div>
+      <div class="btns"><button type="button" id="uBatal" style="display:none">Batal</button><button type="submit" class="primary" id="uSimpan">Tambah</button></div>
     </form>
-    <p class="note" style="padding-top:0">Sandi berlaku untuk semua admin. Bagikan hanya kepada orang yang boleh mengubah Pedoman SOP.</p>
+    <p class="note" style="padding-top:0"><b>Anggota</b>: Tulis, Kamus, Buat Soal, dan Soal miliknya sendiri. <b>Pengurus</b>: seperti Anggota, ditambah menu Materi dan melihat semua soal anggota. <b>Admin</b>: semua akses, termasuk Pedoman SOP dan Pengguna. Pengunjung tanpa akun hanya bisa memakai Tulis dan Kamus.</p>
+  </section>
+  <section class="card" style="margin-top:18px">
+    <div class="scroll" style="max-height:none">
+      <table>
+        <thead><tr><th>Nama</th><th>Username</th><th>Peran</th><th>Status</th><th>Masuk terakhir</th><th style="text-align:right">Aksi</th></tr></thead>
+        <tbody id="uRows"></tbody>
+      </table>
+    </div>
   </section>
 </section>
 </main>
 <div class="modal" id="mLogin" hidden>
-  <form class="modal-card" id="fLogin" autocomplete="off">
-    <h3>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      Masuk sebagai Admin
-    </h3>
-    <p>Admin bisa membuka menu Pedoman SOP dan mengubah aturan penulisan.</p>
-    <input class="inp" type="password" id="loginPass" placeholder="Sandi admin" required>
+  <form class="modal-card" id="fLogin">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Masuk akun resmi</h3>
+    <p>Untuk Admin, Pengurus, dan Anggota. Tanpa akun, Anda tetap bisa memakai menu Tulis dan Kamus.</p>
+    <input class="inp" id="loginUser" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+    <input class="inp" type="password" id="loginPass" placeholder="Sandi" autocomplete="current-password" required style="margin-top:8px">
     <p class="err" id="loginErr"></p>
     <div class="btns">
       <button type="button" id="loginCancel">Batal</button>
       <button type="submit" class="primary" id="loginGo">Masuk</button>
+    </div>
+  </form>
+</div>
+<div class="modal" id="mAkun" hidden>
+  <form class="modal-card" id="fAkun" autocomplete="off">
+    <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span id="akNama">Akun</span></h3>
+    <p><span class="tag own" id="akPeran"></span> <span id="akUser" class="muted"></span></p>
+    <div class="ef"><label for="akLama">Sandi lama</label><input class="inp" type="password" id="akLama" autocomplete="current-password"></div>
+    <div class="ef"><label for="akBaru">Sandi baru</label><input class="inp" type="password" id="akBaru" minlength="6" autocomplete="new-password"></div>
+    <div class="ef"><label for="akBaru2">Ulangi sandi baru</label><input class="inp" type="password" id="akBaru2" minlength="6" autocomplete="new-password"></div>
+    <div class="btns">
+      <button type="button" class="danger" id="akKeluar">Keluar</button>
+      <span style="flex:1"></span>
+      <button type="button" id="akTutup">Tutup</button>
+      <button type="submit" class="primary" id="akSimpan">Ganti sandi</button>
     </div>
   </form>
 </div>
@@ -1954,33 +2090,16 @@ var PegonEngine = (function () {
       s.kamus.forEach(function(x){ ada[x.latin] = 1; });
       ps.forEach(function(p){ if (ada[p[0]]) { tolak.push(p[0]); return; } ada[p[0]] = 1; s.kamus.push({ latin: p[0], pegon: p[1] }); n++; });
       var d = this.out(); d.impor = { ditambah: n, ditolak: tolak }; return d; },
-    sandi: function(){ return store.get('pegon-uji-sandi') || 'pegon123'; },
-    loginAdmin: function(p){ if (p !== this.sandi()) throw new Error('Sandi admin salah.'); var t = 'uji-' + Date.now(); store.set('pegon-uji-token', t); return t; },
-    cekAdmin: function(t){ return !!t && t === store.get('pegon-uji-token'); },
-    logoutAdmin: function(){ store.set('pegon-uji-token', ''); return true; },
-    gantiSandi: function(t, lama, baru){ if (!this.cekAdmin(t)) throw new Error('Sesi admin berakhir. Silakan masuk lagi.');
-      if (lama !== this.sandi()) throw new Error('Sandi lama salah.'); if (String(baru).length < 6) throw new Error('Sandi baru minimal 6 huruf.');
-      store.set('pegon-uji-sandi', baru); return true; },
-    wajib: function(t){ if (!this.cekAdmin(t)) throw new Error('Sesi admin berakhir. Silakan masuk lagi.'); },
+    // Akun resmi, Materi, dan Bank Soal butuh server (API_URL). Mode uji hanya untuk Tulis & Kamus.
+    loginAkun: function(){ throw new Error('Akun resmi butuh server. Isi API_URL di index.html.'); },
+    cekSesi: function(){ return null; },
+    logoutAkun: function(){ return true; },
+    wajib: function(){ throw new Error('Fitur ini butuh server.'); },
     simpanPedoman: function(t, r){ this.wajib(t); var s = this.state(); var f = s.pedoman.filter(function(x){ return x.id === r.id; })[0];
       if (f) Object.assign(f, r); else s.pedoman.push(Object.assign({}, r, { id: 'p' + Date.now() })); return this.out(); },
     hapusPedoman: function(t, id){ this.wajib(t); var s = this.state(); s.pedoman = s.pedoman.filter(function(x){ return x.id !== id; }); return this.out(); },
     simpanAturan: function(t, j, l, p){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); s.aturan.push({ jenis: j, latin: l, pegon: p }); return this.out(); },
-    hapusAturan: function(t, j, l){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); return this.out(); },
-    // Bank Soal (mode uji: hanya di browser ini)
-    bank: function(){ var s = this.state(); if (!s.bank) s.bank = []; return s.bank; },
-    getSoal: function(){ var b = this.bank(); this.out(); return JSON.parse(JSON.stringify(b)).reverse(); },
-    simpanSoal: function(list){ var b = this.bank(), ids = [], n = 0, ada = 0;
-      (list || []).forEach(function(x){
-        var f = b.filter(function(y){ return y.jenis === x.jenis && y.bahasa === x.bahasa && y.pertanyaan === x.pertanyaan; })[0];
-        if (f) { ids.push(f.id); ada++; return; }
-        var id = 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-        b.push(Object.assign({}, x, { id: id })); ids.push(id); n++; });
-      return { soal: this.getSoal(), simpan: { ditambah: n, sudahAda: ada, ids: ids } }; },
-    hapusSoal: function(ids){ var s = this.state(); s.bank = this.bank().filter(function(x){ return ids.indexOf(x.id) < 0; }); return { soal: this.getSoal() }; },
-    ubahSoal: function(list){ var b = this.bank(), n = 0;
-      list.forEach(function(x){ b.forEach(function(y, i){ if (y.id === x.id) { b[i] = Object.assign({}, y, x); n++; } }); });
-      return { soal: this.getSoal(), diubah: n }; }
+    hapusAturan: function(t, j, l){ this.wajib(t); var s = this.state(); s.aturan = s.aturan.filter(function(x){ return !(x.jenis === j && x.latin === l); }); return this.out(); }
   };
 
   function call(fn, args){
@@ -2017,7 +2136,6 @@ var PegonEngine = (function () {
       var at = { konsonan: {}, akhir: {} };
       (d.aturan || []).forEach(function(x){ if (at[x.jenis]) at[x.jenis][String(x.latin).toLowerCase()] = String(x.pegon || ''); });
       this.aturan = at; this.loaded = true;
-      if (typeof d.nSoal === 'number' && !Bank.loaded) $('navSoal').textContent = d.nSoal;
       refreshAll();
     },
     okStatus: function(){ setStatus(SERVER ? 'online' : 'warn', SERVER ? '☁ Data bersama · Google Spreadsheet' : 'Mode uji · API_URL belum diisi'); },
@@ -2045,9 +2163,9 @@ var PegonEngine = (function () {
     },
     // perubahan khusus admin: kirim token sesi, keluar otomatis bila sesi berakhir
     adminRun: function(fn, args, okMsg){
-      if (!Role.admin) { toast('Fitur ini khusus Admin'); return Promise.reject(new Error('bukan admin')); }
-      return this.run(fn, [Role.token].concat(args || []), okMsg).catch(function(err){
-        if (err && /Sesi admin/.test(err.message || '')) Role.set(false, '');
+      if (Akun.level() < 3) { toast('Fitur ini khusus Admin'); return Promise.reject(new Error('bukan admin')); }
+      return this.run(fn, [Akun.token].concat(args || []), okMsg).catch(function(err){
+        if (err && /Sesi berakhir/.test(err.message || '')) Akun.keluar('Sesi berakhir. Silakan masuk lagi.');
         throw err;
       });
     },
@@ -2465,10 +2583,11 @@ var PegonEngine = (function () {
   function setSStatus(cls, text){ var el = $('sStatus'); el.className = 'status ' + cls; el.textContent = text; }
   function cekAI(){
     if (!SERVER) { setSStatus('warn', 'Butuh server (API_URL)'); return; }
-    call('cekAI').then(function(d){
+    if (!Akun.user) return;
+    akunCall('cekAI').then(function(d){
       if (d && d.siap) setSStatus('online', '✦ AI siap');
       else setSStatus('warn', 'AI belum diaktifkan admin');
-    }, function(){ setSStatus('warn', 'Server belum diperbarui'); });
+    }, function(err){ setSStatus('warn', /diperbarui/.test((err && err.message) || '') ? 'Server belum diperbarui' : 'AI belum termuat'); });
   }
   // teks dari AI -> tulisan yang ditampilkan (Pegon memakai mesin SOP aplikasi ini)
   function sTulis(t, bahasa){
@@ -2507,9 +2626,11 @@ var PegonEngine = (function () {
       if (o.pick === 'buat') pick = s._bank ? '<span class="pick saved">✓ Di Bank Soal</span>'
         : '<label class="pick"><input type="checkbox" data-k="' + esc(key) + '"' + (on ? ' checked' : '') + '><span>Masukkan</span></label>';
       else if (o.pick === 'bank') pick = '<label class="pick"><input type="checkbox" data-k="' + esc(key) + '"' + (on ? ' checked' : '') + '><span>Pilih</span></label>' +
-        '<button type="button" class="mini ed" data-ed="' + esc(s.id) + '">✎ Ubah</button>';
+        (bolehUbah(s) ? '<button type="button" class="mini ed" data-ed="' + esc(s.id) + '">✎ Ubah</button>' : '');
       html += '<li class="' + (rtl ? 'rtl' : '') + (on ? ' on' : '') + '"><div class="meta' + (pick ? '' : ' nopick') + '">' + pick + blTag(s.bloom) +
         '<span class="tag">' + esc(Soal.JENIS_NAMA[s.jenis] || s.jenis) + '</span>' +
+        (o.pick === 'bank' && s.kitab ? '<span class="tag src">📖 ' + esc(s.kitab + (s.bab ? ' › ' + s.bab : '')) + '</span>' : '') +
+        (o.pick === 'bank' && Akun.level() >= 2 && s.pembuat ? '<span class="tag by">' + (s.milikSaya ? 'Soal saya' : 'oleh ' + esc(s.pembuat)) + '</span>' : '') +
         (o.pick === 'bank' && s.materi ? '<span class="tag mt' + (modePegon(s.bahasa) || s.bahasa === 'arab' ? ' ar' : '') + '">' + esc(sTulis(s.materi, s.bahasa)) + '</span>' : '') +
         (s.indikator ? '<span class="ind"><b>Indikator:</b> ' + esc(s.indikator) + '</span>' : '') + '</div>' +
         '<div class="q">' + esc(sTulis(s.pertanyaan, b)) + '</div>';
@@ -2608,7 +2729,7 @@ var PegonEngine = (function () {
     if (!idx.length) { toast('Centang dulu soal yang mau dimasukkan'); return; }
     var items = idx.map(function(i){ return keBank(h.soal[i], h.bahasa, h.judul); });
     var btn = $('sSaveBank'); btn.disabled = true; btn.textContent = 'Menyimpan…';
-    call('simpanSoal', [items, h.ibarat || $('sIbarat').value]).then(function(d){
+    akunCall('simpanSoal', [items, h.ibarat || $('sIbarat').value, h.sumber || {}]).then(function(d){
       var r = d.simpan || { ids: [], ditambah: 0, sudahAda: 0 };
       idx.forEach(function(i, j){ if (r.ids[j]) h.soal[i]._bank = r.ids[j]; });
       Soal.pilih = {}; simpanHasil(); Bank.terima(d.soal);
@@ -2760,7 +2881,7 @@ var PegonEngine = (function () {
     if (pg) item.latin = { materi: d.materi.lat.trim(), pertanyaan: d.pertanyaan.lat.trim(), pilihan: pilLat,
       jawaban: d.jenis === 'pg' ? jawab : d.jenis === 'bs' ? d.bs : d.jawaban.lat.trim(), pembahasan: d.pembahasan.lat.trim() };
     var btn = $('eSave'); btn.disabled = true; btn.textContent = 'Menyimpan…';
-    call('ubahSoal', [[item]]).then(function(r){
+    akunCall('ubahSoal', [[item]]).then(function(r){
       btn.disabled = false; btn.textContent = 'Simpan perubahan';
       tutupUbah(); Bank.terima(r.soal); toast('Soal diperbarui');
     }, function(err){
@@ -2770,10 +2891,10 @@ var PegonEngine = (function () {
   });
   // ubah soal Pegon lama (masih Latin di Spreadsheet) menjadi tulisan Pegon
   $('bUpgrade').addEventListener('click', function(){
-    var lama = Bank.list.filter(soalLama); if (!lama.length) return;
+    var lama = Bank.list.filter(function(s){ return soalLama(s) && bolehUbah(s); }); if (!lama.length) return;
     var btn = this; btn.disabled = true; btn.textContent = 'Mengubah ' + lama.length + ' soal…';
     var items = lama.map(function(s){ var o = keBank(s, s.bahasa, s.materi); o.id = s.id; return o; });
-    call('ubahSoal', [items]).then(function(r){ btn.disabled = false; Bank.terima(r.soal); toast(r.diubah + ' soal kini bertulisan Pegon di Spreadsheet'); },
+    akunCall('ubahSoal', [items]).then(function(r){ btn.disabled = false; Bank.terima(r.soal); toast(r.diubah + ' soal kini bertulisan Pegon di Spreadsheet'); },
       function(err){ btn.disabled = false; renderBank(); toast('Gagal: ' + ((err && err.message) || 'periksa koneksi')); });
   });
 
@@ -2793,7 +2914,7 @@ var PegonEngine = (function () {
       if (this.busy) return;
       var self = this; this.busy = true;
       if (!this.loaded) $('bStatus').textContent = 'Memuat…';
-      call('getSoal').then(function(list){ self.busy = false; self.terima(list); }, function(err){
+      akunCall('getSoal').then(function(list){ self.busy = false; self.terima(list); }, function(err){
         self.busy = false; $('bStatus').className = 'status warn'; $('bStatus').textContent = 'Belum termuat';
         if (!self.loaded) $('bOut').innerHTML = '<p class="note" style="padding:24px 16px;text-align:center;color:var(--warn);font-weight:600">' +
           esc(/Perintah tidak dikenal/.test((err && err.message) || '') ? 'Server belum diperbarui. Admin perlu memasang Code.gs versi baru.' : ((err && err.message) || 'Bank soal belum termuat')) + '</p>';
@@ -2801,7 +2922,10 @@ var PegonEngine = (function () {
     },
     tampil: function(){
       var q = $('bCari').value.trim().toLowerCase(), m = $('bMateri').value, bl = $('bBloom').value, j = $('bJenis').value;
+      var kt = $('bKitab').value, pb = Akun.level() >= 2 ? $('bPembuat').value : '';
       return this.list.filter(function(s){
+        if (kt === '(tanpa)' ? s.kitab : (kt && s.kitab !== kt)) return false;
+        if (pb === 'saya' ? !s.milikSaya : (pb && s.pembuatId !== pb)) return false;
         if (m && s.materi !== m) return false;
         if (j && s.jenis !== j) return false;
         if (bl === 'LOTS' && !/^C[123]$/.test(s.bloom)) return false;
@@ -2811,8 +2935,10 @@ var PegonEngine = (function () {
         return true;
       });
     },
-    terpilih: function(){ var p = this.pilih; return this.list.filter(function(s){ return p[s.id]; }); }
+    terpilih: function(){ var p = this.pilih; return this.list.filter(function(s){ return p[s.id]; }); },
+    reset: function(){ this.list = []; this.loaded = false; this.pilih = {}; this.konfirmHapus = false; $('navSoal').textContent = '0'; $('bOut').innerHTML = ''; }
   };
+  function bolehUbah(s){ return !!s.milikSaya || Akun.level() >= 3; }
   function renderBank(){
     // daftar materi untuk saringan
     var sel = $('bMateri'), cur = sel.value, materi = [];
@@ -2820,6 +2946,15 @@ var PegonEngine = (function () {
     materi.sort(function(a, b){ return a.localeCompare(b, 'id'); });
     sel.innerHTML = '<option value="">Semua materi</option>' + materi.map(function(x){ return '<option value="' + esc(x) + '">' + esc(x) + '</option>'; }).join('');
     if (materi.indexOf(cur) >= 0) sel.value = cur;
+    // saringan kitab dan pembuat
+    var ks = [], tanpa = false, ps = {};
+    Bank.list.forEach(function(s){ if (s.kitab) { if (ks.indexOf(s.kitab) < 0) ks.push(s.kitab); } else tanpa = true; if (s.pembuatId && !s.milikSaya) ps[s.pembuatId] = s.pembuat || s.pembuatId; });
+    var kc = $('bKitab').value;
+    $('bKitab').innerHTML = '<option value="">Semua kitab</option>' + ks.sort().map(function(k){ return '<option value="' + esc(k) + '">' + esc(k) + '</option>'; }).join('') + (tanpa && ks.length ? '<option value="(tanpa)">Tanpa kitab (ibarat ditulis sendiri)</option>' : '');
+    if (ks.indexOf(kc) >= 0 || kc === '(tanpa)') $('bKitab').value = kc;
+    var pc = $('bPembuat').value;
+    $('bPembuat').innerHTML = '<option value="">Semua pembuat</option><option value="saya">Soal saya</option>' + Object.keys(ps).sort(function(a, b){ return ps[a].localeCompare(ps[b]); }).map(function(id){ return '<option value="' + esc(id) + '">' + esc(ps[id]) + '</option>'; }).join('');
+    if (pc === 'saya' || ps[pc]) $('bPembuat').value = pc;
     var shown = Bank.tampil(), out = $('bOut'), n = Object.keys(Bank.pilih).length;
     $('bCount').textContent = (shown.length !== Bank.list.length ? shown.length + ' dari ' : '') + Bank.list.length + ' soal';
     $('bPicked').textContent = n ? n + ' soal dipilih' : 'Belum ada yang dipilih';
@@ -2830,7 +2965,7 @@ var PegonEngine = (function () {
     $('bDel').disabled = !n;
     $('bDel').textContent = Bank.konfirmHapus && n ? 'Yakin hapus ' + n + ' soal?' : 'Hapus' + (n ? ' (' + n + ')' : '');
     $('bCopy').textContent = n ? 'Salin (' + n + ')' : 'Salin';
-    var nLama = Bank.list.filter(soalLama).length;
+    var nLama = Bank.list.filter(function(s){ return soalLama(s) && bolehUbah(s); }).length;
     $('bUpgrade').style.display = nLama ? '' : 'none';
     $('bUpgrade').textContent = 'Tulis ' + nLama + ' soal lama dalam Pegon di Spreadsheet';
     $('bPrintBtn').textContent = n ? 'Cetak (' + n + ')' : 'Cetak';
@@ -2840,7 +2975,7 @@ var PegonEngine = (function () {
     if (!shown.length) { out.innerHTML = '<p class="note" style="padding:24px 16px;text-align:center">Tidak ada soal yang cocok dengan saringan.</p>'; return; }
     out.innerHTML = sRender(shown, { kunci: $('bKunci').checked, pick: 'bank', dipilih: Bank.pilih, kunciPilih: function(s){ return s.id; } });
   }
-  ['bCari','bMateri','bBloom','bJenis'].forEach(function(id){ $(id).addEventListener(id === 'bCari' ? 'input' : 'change', function(){ Bank.konfirmHapus = false; renderBank(); }); });
+  ['bCari','bMateri','bKitab','bPembuat','bBloom','bJenis'].forEach(function(id){ $(id).addEventListener(id === 'bCari' ? 'input' : 'change', function(){ Bank.konfirmHapus = false; renderBank(); }); });
   ['bKunci','bInd'].forEach(function(id){ $(id).addEventListener('change', renderBank); });
   $('bOut').addEventListener('click', function(e){ var b = e.target.closest('[data-ed]'); if (b) bukaUbah(b.dataset.ed); });
   $('bOut').addEventListener('change', function(e){
@@ -2875,8 +3010,9 @@ var PegonEngine = (function () {
     if (!Bank.konfirmHapus) { Bank.konfirmHapus = true; renderBank(); return; }
     Bank.konfirmHapus = false;
     var btn = $('bDel'); btn.disabled = true; btn.textContent = 'Menghapus…';
-    call('hapusSoal', [ids]).then(function(d){
-      Bank.pilih = {}; Bank.terima(d.soal); toast(ids.length + ' soal dihapus dari Bank Soal');
+    akunCall('hapusSoal', [ids]).then(function(d){
+      Bank.pilih = {}; Bank.terima(d.soal);
+      toast(d.dihapus + ' soal dihapus dari Bank Soal' + (d.ditolak ? '. ' + d.ditolak + ' soal milik orang lain tidak ikut dihapus.' : ''));
       // tandai ulang di hasil Buat Soal
       if (Soal.hasil) { var del = {}; ids.forEach(function(x){ del[x] = 1; }); Soal.hasil.soal.forEach(function(s){ if (del[s._bank]) delete s._bank; }); simpanHasil(); renderSoal(); }
     }, function(err){ renderBank(); toast('Gagal menghapus: ' + ((err && err.message) || 'periksa koneksi')); });
@@ -2891,7 +3027,7 @@ var PegonEngine = (function () {
     pasangMic({ btn: 'sMic', label: 'sMicLabel', listen: 'sListen', partial: 'sPartial', ta: 'sIbarat',
       lang: function(){ return $('sMicLang').value; }, onText: sLen });
   })();
-  $('sClear').addEventListener('click', function(){ $('sIbarat').value = ''; sLen(); $('sIbarat').focus(); });
+  $('sClear').addEventListener('click', function(){ $('sIbarat').value = ''; sLen(); setSumber(null); $('sBab').value = ''; $('sIbarat').focus(); });
   $('sPaste').addEventListener('click', function(){
     if (!navigator.clipboard || !navigator.clipboard.readText) { $('sIbarat').focus(); toast('Tekan lama lalu pilih Tempel, atau Ctrl+V'); return; }
     navigator.clipboard.readText().then(function(t){
@@ -2925,10 +3061,10 @@ var PegonEngine = (function () {
     $('sOut').className = 'soal-out';
     $('sOut').innerHTML = '<div class="soal-load"><div class="spin"></div>AI sedang membaca ibarat dan menyusun soal ' + esc(bl.join(', ')) + '…</div>';
     $('sOutCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    call('buatSoal', [ib, { jumlah: $('sJumlah').value, model: $('sModel').value, bloom: bl, bahasa: $('sBahasa').value,
+    akunCall('buatSoal', [ib, { jumlah: $('sJumlah').value, model: $('sModel').value, bloom: bl, bahasa: $('sBahasa').value,
       catatan: $('sCatatan').value.trim() }]).then(function(d){
       btn.disabled = false; $('sGoLabel').textContent = 'Buat Soal';
-      Soal.hasil = d; d.ibarat = ib; Soal.pilih = {}; simpanHasil(); renderSoal();
+      Soal.hasil = d; d.ibarat = ib; d.sumber = Soal.sumber ? { kitab: Soal.sumber.kitab, bab: Soal.sumber.bab } : null; Soal.pilih = {}; simpanHasil(); renderSoal();
       toast(d.soal.length + ' soal dibuat');
       setSStatus('online', '✦ AI siap');
     }, function(err){
@@ -2950,73 +3086,322 @@ var PegonEngine = (function () {
   });
   $('sIbarat').value = store.get('pegon-ibarat') || ''; sLen();
   try { Soal.hasil = JSON.parse(store.get('pegon-soal-hasil') || 'null'); } catch(e){}
-  cekAI();
 
-  /* ================= Peran: Admin & Pengguna ================= */
-  var Role = {
-    admin: false, token: '',
-    set: function(isAdmin, token){
-      this.admin = !!isAdmin; this.token = isAdmin ? token : '';
-      store.set('pegon-admin-token' + (SERVER ? '' : '-uji'), this.token);
-      document.body.classList.toggle('is-admin', this.admin);
-      $('roleName').textContent = this.admin ? 'Admin' : 'Pengguna';
-      $('roleAct').textContent = this.admin ? 'Keluar' : 'Masuk Admin';
-      if (!this.admin) { pedEdit = false; atEdit = null; route(); }
+  /* ================= Akun pengguna resmi ================= */
+  var LEVEL = { anggota: 1, pengurus: 2, admin: 3 };
+  var Akun = {
+    user: null, token: '', memulihkan: false,
+    level: function(){ return this.user ? (LEVEL[this.user.peran] || 0) : 0; },
+    set: function(user, token){
+      var dulu = this.user ? this.user.id : null;
+      this.user = user || null; this.token = user ? token : '';
+      store.set('pegon-akun-token', this.token);
+      var L = this.level();
+      document.body.classList.toggle('is-resmi', L >= 1);
+      document.body.classList.toggle('is-pengurus', L >= 2);
+      document.body.classList.toggle('is-admin', L >= 3);
+      $('roleName').textContent = user ? user.peranNama : 'Pengunjung';
+      $('roleAct').textContent = user ? user.nama : 'Masuk';
+      if (!user || (dulu && dulu !== user.id)) {
+        // data pribadi tidak boleh terbawa ke pengguna berikutnya di browser yang sama
+        Bank.reset(); Materi.reset(); Pengguna.list = [];
+        Soal.hasil = null; Soal.pilih = {}; Soal.sumber = null; store.set('pegon-soal-hasil', ''); store.set('pegon-soal-sumber', '');
+        $('sOut').innerHTML = '<p class="note" style="padding:24px 16px;text-align:center">Belum ada soal. Tempel ibarat di atas lalu tekan <b>Buat Soal</b>.</p>';
+        tampilSumber(); sPickUi(); pedEdit = false; atEdit = null;
+      }
+      if (user && dulu !== user.id) { Bank.load(); Materi.load(); cekAI(); }
+      route();
     },
     restore: function(){
-      var t = store.get('pegon-admin-token' + (SERVER ? '' : '-uji')), self = this;
-      if (!t) return;
-      call('cekAdmin', [t]).then(function(ok){ if (ok) { self.set(true, t); route(); } else self.set(false, ''); }, function(){});
+      var t = store.get('pegon-akun-token'), self = this;
+      if (!t || !SERVER) { this.set(null); return; }
+      this.memulihkan = true;
+      call('cekSesi', [t]).then(function(u){ self.memulihkan = false; self.set(u, t); },
+        function(){ self.memulihkan = false; route(); });
+    },
+    keluar: function(pesan){
+      var t = this.token; this.set(null);
+      if (t) call('logoutAkun', [t]).catch(function(){});
+      if (pesan) toast(pesan);
     }
   };
+  // panggilan server yang butuh akun: token dikirim di depan; keluar otomatis bila sesi berakhir
+  function akunCall(fn, args){
+    if (!Akun.token) return Promise.reject(new Error('Silakan masuk dengan akun resmi dulu.'));
+    return call(fn, [Akun.token].concat(args || [])).catch(function(err){
+      var m = (err && err.message) || '';
+      if (/Sesi berakhir/.test(m)) Akun.keluar('Sesi berakhir. Silakan masuk lagi.');
+      else if (/Perintah tidak dikenal/.test(m)) err = new Error('Server belum diperbarui. Admin perlu memasang Code.gs versi baru.');
+      throw err;
+    });
+  }
   function openLogin(){
+    if (!SERVER) { toast('Akun resmi butuh server. Isi API_URL di index.html.'); return; }
     $('loginErr').textContent = ''; $('loginPass').value = '';
-    $('mLogin').hidden = false; setTimeout(function(){ $('loginPass').focus(); }, 30);
+    $('mLogin').hidden = false; setTimeout(function(){ ($('loginUser').value ? $('loginPass') : $('loginUser')).focus(); }, 30);
   }
   function closeLogin(){ $('mLogin').hidden = true; }
-  $('btnRole').addEventListener('click', function(){
-    if (!Role.admin) { openLogin(); return; }
-    var t = Role.token;
-    Role.set(false, '');
-    call('logoutAdmin', [t]).catch(function(){});
-    toast('Keluar dari Admin. Sekarang sebagai Pengguna.');
-  });
+  function bukaAkun(){
+    var u = Akun.user;
+    $('akNama').textContent = u.nama; $('akPeran').textContent = u.peranNama; $('akUser').textContent = '@' + u.username;
+    $('fAkun').reset(); $('mAkun').hidden = false;
+  }
+  function tutupAkun(){ $('mAkun').hidden = true; }
+  $('btnRole').addEventListener('click', function(){ if (Akun.user) bukaAkun(); else openLogin(); });
   $('loginCancel').addEventListener('click', closeLogin);
   $('mLogin').addEventListener('click', function(e){ if (e.target === this) closeLogin(); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('mLogin').hidden) closeLogin(); });
+  $('akTutup').addEventListener('click', tutupAkun);
+  $('mAkun').addEventListener('click', function(e){ if (e.target === this) tutupAkun(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { closeLogin(); tutupAkun(); } });
+  $('akKeluar').addEventListener('click', function(){ tutupAkun(); Akun.keluar('Anda sudah keluar. Menu Tulis dan Kamus tetap bisa dipakai.'); });
   $('fLogin').addEventListener('submit', function(e){
     e.preventDefault();
     var btn = $('loginGo'); btn.disabled = true; $('loginErr').textContent = '';
-    call('loginAdmin', [$('loginPass').value]).then(function(token){
-      btn.disabled = false; closeLogin(); Role.set(true, token);
-      toast('Masuk sebagai Admin'); route('pedoman');
+    var un = $('loginUser').value.trim().toLowerCase();
+    call('loginAkun', [un, $('loginPass').value]).then(function(r){
+      btn.disabled = false; closeLogin(); store.set('pegon-akun-user', un);
+      Akun.set(r.user, r.token);
+      toast('Assalamu’alaikum, ' + r.user.nama + ' (' + r.user.peranNama + ')');
     }, function(err){
       btn.disabled = false;
       $('loginErr').textContent = (err && err.message) ? err.message : 'Gagal masuk, coba lagi';
       $('loginPass').select();
     });
   });
-  $('fPass').addEventListener('submit', function(e){
+  $('loginUser').value = store.get('pegon-akun-user') || '';
+  $('fAkun').addEventListener('submit', function(e){
     e.preventDefault();
-    if ($('pwNew').value !== $('pwNew2').value) { toast('Ulangi sandi baru belum sama'); return; }
-    var btn = $('pwSave'); btn.disabled = true;
-    call('gantiSandi', [Role.token, $('pwOld').value, $('pwNew').value]).then(function(){
-      btn.disabled = false; $('fPass').reset(); toast('Sandi admin diganti');
-    }, function(err){
-      btn.disabled = false; toast((err && err.message) ? err.message : 'Gagal mengganti sandi');
-      if (err && /Sesi admin/.test(err.message || '')) Role.set(false, '');
-    });
+    if (!$('akLama').value || !$('akBaru').value) { toast('Isi sandi lama dan sandi baru'); return; }
+    if ($('akBaru').value !== $('akBaru2').value) { toast('Ulangi sandi baru belum sama'); return; }
+    var btn = $('akSimpan'); btn.disabled = true;
+    akunCall('gantiSandiSaya', [$('akLama').value, $('akBaru').value]).then(function(){
+      btn.disabled = false; $('fAkun').reset(); tutupAkun(); toast('Sandi berhasil diganti');
+    }, function(err){ btn.disabled = false; toast((err && err.message) || 'Gagal mengganti sandi'); });
+  });
+
+  /* ================= Materi: kitab & bab (Pengurus dan Admin mengubah; semua pengguna resmi membaca) ================= */
+  var Materi = {
+    list: [], loaded: false, busy: false, kitab: '', edit: null, hapusBab: null, hapusKitab: false, ganti: false,
+    reset: function(){ this.list = []; this.loaded = false; this.kitab = ''; this.edit = null; renderMateri(); isiPilihSumber(); },
+    load: function(){
+      if (this.busy || !Akun.user) return;
+      var self = this; this.busy = true;
+      akunCall('getMateri').then(function(l){ self.busy = false; self.terima(l); },
+        function(err){ self.busy = false; $('mStatus').className = 'status warn'; $('mStatus').textContent = (err && err.message) || 'Belum termuat'; });
+    },
+    terima: function(l){
+      this.list = l || []; this.loaded = true;
+      var ks = this.daftarKitab();
+      if (ks.indexOf(this.kitab) < 0 && this.edit !== 'baru') this.kitab = ks[0] || '';
+      $('mStatus').className = 'status online'; $('mStatus').textContent = ks.length + ' kitab · ' + this.list.length + ' bab';
+      renderMateri(); isiPilihSumber();
+    },
+    daftarKitab: function(){ var k = []; this.list.forEach(function(x){ if (k.indexOf(x.kitab) < 0) k.push(x.kitab); }); return k; },
+    babDari: function(k){ return this.list.filter(function(x){ return x.kitab === k; }); },
+    cari: function(id){ return this.list.filter(function(x){ return x.id === id; })[0]; }
+  };
+  function adaArab(t){ return /[؀-ۿ]/.test(t || ''); }
+  function renderMateri(){
+    var ks = Materi.daftarKitab();
+    $('mKitabList').innerHTML = ks.length ? ks.map(function(k){
+      return '<button type="button" data-kitab="' + esc(k) + '" class="' + (k === Materi.kitab ? 'on' : '') + '"><span>' + esc(k) + '</span><span class="n2">' + Materi.babDari(k).length + ' bab</span></button>';
+    }).join('') : '<p class="note" style="padding:6px">Belum ada kitab. Tekan <b>+ Kitab baru</b>.</p>';
+    $('mKitabDL').innerHTML = ks.map(function(k){ return '<option value="' + esc(k) + '">'; }).join('');
+    var k = Materi.kitab, ada = !!k && ks.indexOf(k) >= 0;
+    if (Materi.ganti && ada) {
+      $('mJudul').innerHTML = '<input class="inp" id="mGantiInp" value="' + esc(k) + '" style="font-size:14px;padding:6px 10px;min-width:200px">';
+    } else $('mJudul').textContent = ada ? k : 'Bab / Fasal';
+    $('mRename').style.display = ada ? '' : 'none';
+    $('mHapusKitab').style.display = ada && !Materi.ganti ? '' : 'none';
+    $('mRename').textContent = Materi.ganti ? 'Simpan nama' : 'Ganti nama';
+    $('mRename').classList.toggle('primary', Materi.ganti);
+    $('mHapusKitab').textContent = Materi.hapusKitab ? 'Yakin hapus kitab & ' + Materi.babDari(k).length + ' bab?' : 'Hapus kitab';
+    var bab = ada ? Materi.babDari(k) : [];
+    $('mBabList').innerHTML = !ada ? '<p class="note" style="padding:24px 16px;text-align:center">' + (ks.length ? 'Pilih kitab di kiri.' : 'Tambahkan kitab pertama dengan <b>+ Kitab baru</b>, lalu isi bab/fasal beserta ibaratnya.') + '</p>'
+      : !bab.length ? '<p class="note" style="padding:24px 16px;text-align:center">Belum ada bab.</p>'
+      : bab.map(function(b){
+        var acts = Materi.hapusBab === b.id
+          ? '<button type="button" class="danger" data-a="m-del-yes" data-id="' + esc(b.id) + '">Ya, hapus</button><button type="button" data-a="m-del-no">Batal</button>'
+          : '<button type="button" data-a="m-edit" data-id="' + esc(b.id) + '">Ubah</button><button type="button" class="danger" data-a="m-del" data-id="' + esc(b.id) + '">×</button>';
+        return '<div class="bab-row"><span class="no">' + esc(b.urutan) + '</span><div><div class="jd"' + (adaArab(b.bab) ? ' style="font-family:var(--ar);font-size:20px"' : '') + '>' + esc(b.bab) + '</div>' +
+          '<div class="pv">' + esc(b.ibarat) + '</div><div class="ol">' + esc(b.ibarat.length) + ' huruf' + (b.oleh ? ' · diperbarui oleh ' + esc(b.oleh) : '') + '</div></div>' +
+          '<div class="btns acts">' + acts + '</div></div>';
+      }).join('');
+  }
+  function bukaFormBab(b){
+    Materi.edit = b ? b.id : 'baru';
+    $('mKitab').value = b ? b.kitab : (Materi.kitab || '');
+    $('mUrutan').value = b ? b.urutan : '';
+    $('mBab').value = b ? b.bab : '';
+    $('mIbarat').value = b ? b.ibarat : '';
+    $('mSimpan').textContent = b ? 'Simpan perubahan' : 'Simpan bab';
+    $('mForm').hidden = false; mLen();
+    ($('mKitab').value ? $('mBab') : $('mKitab')).focus();
+  }
+  function tutupFormBab(){ Materi.edit = null; $('mForm').hidden = true; }
+  function mLen(){ $('mLen').textContent = $('mIbarat').value.length + ' / 8000 huruf'; }
+  $('mIbarat').addEventListener('input', mLen);
+  $('mKitabBaru').addEventListener('click', function(){ Materi.ganti = false; bukaFormBab(null); $('mKitab').value = ''; $('mKitab').focus(); });
+  $('mBabBaru').addEventListener('click', function(){ bukaFormBab(null); });
+  $('mBatal').addEventListener('click', tutupFormBab);
+  $('mKitabList').addEventListener('click', function(e){
+    var b = e.target.closest('[data-kitab]'); if (!b) return;
+    Materi.kitab = b.dataset.kitab; Materi.hapusKitab = false; Materi.ganti = false; Materi.hapusBab = null; renderMateri();
+  });
+  $('mBabList').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var a = b.dataset.a;
+    if (a === 'm-edit') { bukaFormBab(Materi.cari(b.dataset.id)); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    else if (a === 'm-del') { Materi.hapusBab = b.dataset.id; renderMateri(); }
+    else if (a === 'm-del-no') { Materi.hapusBab = null; renderMateri(); }
+    else if (a === 'm-del-yes') {
+      Materi.hapusBab = null; b.disabled = true;
+      akunCall('hapusBab', [b.dataset.id]).then(function(l){ Materi.terima(l); toast('Bab dihapus'); }, function(err){ renderMateri(); toast((err && err.message) || 'Gagal menghapus'); });
+    }
+  });
+  $('mForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var d = { id: Materi.edit === 'baru' ? '' : Materi.edit, kitab: $('mKitab').value.trim(), urutan: $('mUrutan').value,
+      bab: $('mBab').value.trim(), ibarat: $('mIbarat').value.trim() };
+    if (d.ibarat.length < 10) { toast('Isi ibarat bab ini dulu'); $('mIbarat').focus(); return; }
+    var btn = $('mSimpan'); btn.disabled = true;
+    akunCall('simpanBab', [d]).then(function(l){
+      btn.disabled = false; Materi.kitab = d.kitab; tutupFormBab(); Materi.terima(l); toast('Bab “' + d.bab + '” disimpan');
+    }, function(err){ btn.disabled = false; toast((err && err.message) || 'Gagal menyimpan'); });
+  });
+  $('mRename').addEventListener('click', function(){
+    if (!Materi.ganti) { Materi.ganti = true; Materi.hapusKitab = false; renderMateri(); $('mGantiInp').focus(); return; }
+    var baru = $('mGantiInp').value.trim(), lama = Materi.kitab;
+    if (!baru || baru === lama) { Materi.ganti = false; renderMateri(); return; }
+    this.disabled = true; var btn = this;
+    akunCall('gantiNamaKitab', [lama, baru]).then(function(l){ btn.disabled = false; Materi.ganti = false; Materi.kitab = baru; Materi.terima(l); toast('Nama kitab diganti'); },
+      function(err){ btn.disabled = false; toast((err && err.message) || 'Gagal mengganti nama'); });
+  });
+  $('mJudul').addEventListener('keydown', function(e){ if (e.key === 'Enter' && e.target.id === 'mGantiInp') { e.preventDefault(); $('mRename').click(); } });
+  $('mHapusKitab').addEventListener('click', function(){
+    if (!Materi.hapusKitab) { Materi.hapusKitab = true; renderMateri(); return; }
+    Materi.hapusKitab = false; var k = Materi.kitab, btn = this; btn.disabled = true;
+    akunCall('hapusKitab', [k]).then(function(l){ btn.disabled = false; Materi.kitab = ''; Materi.terima(l); toast('Kitab “' + k + '” dihapus'); },
+      function(err){ btn.disabled = false; renderMateri(); toast((err && err.message) || 'Gagal menghapus'); });
+  });
+  pasangMic({ btn: 'mMic', label: 'mMicLabel', listen: 'mListen', partial: 'mPartial', ta: 'mIbarat',
+    lang: function(){ return 'ar-SA'; }, onText: mLen });
+
+  /* ---- Buat Soal: ambil ibarat dari Materi ---- */
+  try { Soal.sumber = JSON.parse(store.get('pegon-soal-sumber') || 'null'); } catch(e){ Soal.sumber = null; }
+  function isiPilihSumber(){
+    var ks = Materi.daftarKitab(), sk = $('sKitab'), cur = sk.value || (Soal.sumber && Soal.sumber.kitab) || '';
+    sk.innerHTML = '<option value="">' + (ks.length ? 'Pilih kitab…' : (Materi.loaded ? 'Belum ada materi' : 'Memuat materi…')) + '</option>' +
+      ks.map(function(k){ return '<option value="' + esc(k) + '">' + esc(k) + '</option>'; }).join('');
+    sk.disabled = !ks.length;
+    if (ks.indexOf(cur) >= 0) sk.value = cur;
+    isiPilihBab();
+    tampilSumber();
+  }
+  function isiPilihBab(){
+    var k = $('sKitab').value, sb = $('sBab'), bab = k ? Materi.babDari(k) : [];
+    sb.innerHTML = '<option value="">Pilih bab / fasal…</option>' + bab.map(function(b){ return '<option value="' + esc(b.id) + '">' + esc(b.urutan + '. ' + b.bab) + '</option>'; }).join('');
+    sb.disabled = !bab.length;
+    if (Soal.sumber && Soal.sumber.kitab === k && Soal.sumber.id && Materi.cari(Soal.sumber.id)) sb.value = Soal.sumber.id;
+  }
+  function tampilSumber(){
+    var s = Soal.sumber;
+    $('sSrcChip').hidden = !s;
+    $('sSrcTxt').textContent = s ? '📖 ' + s.kitab + ' › ' + s.bab : '';
+  }
+  function setSumber(s){ Soal.sumber = s; store.set('pegon-soal-sumber', s ? JSON.stringify(s) : ''); tampilSumber(); }
+  $('sKitab').addEventListener('change', function(){ isiPilihBab(); });
+  $('sBab').addEventListener('change', function(){
+    var b = Materi.cari(this.value); if (!b) return;
+    var ta = $('sIbarat');
+    if (ta.value.trim() && ta.value.trim() !== b.ibarat.trim()) toast('Ibarat diganti dengan “' + b.bab + '”');
+    ta.value = b.ibarat; sLen();
+    setSumber({ id: b.id, kitab: b.kitab, bab: b.bab });
+  });
+  $('sSrcX').addEventListener('click', function(){ setSumber(null); $('sBab').value = ''; });
+
+  /* ================= Pengguna (khusus Admin) ================= */
+  var Pengguna = {
+    list: [], edit: null, hapus: null, busy: false,
+    load: function(){
+      if (this.busy || Akun.level() < 3) return;
+      var self = this; this.busy = true; $('uStatus').textContent = 'Memuat…';
+      akunCall('daftarPengguna').then(function(l){ self.busy = false; self.terima(l); },
+        function(err){ self.busy = false; $('uStatus').className = 'status warn'; $('uStatus').textContent = (err && err.message) || 'Belum termuat'; });
+    },
+    terima: function(l){
+      this.list = l || [];
+      var c = { admin: 0, pengurus: 0, anggota: 0 }; this.list.forEach(function(u){ c[u.peran]++; });
+      $('uStatus').className = 'status online';
+      $('uStatus').textContent = c.admin + ' admin · ' + c.pengurus + ' pengurus · ' + c.anggota + ' anggota';
+      renderPengguna();
+    }
+  };
+  function renderPengguna(){
+    var saya = Akun.user ? Akun.user.id : '';
+    $('uRows').innerHTML = Pengguna.list.length ? Pengguna.list.map(function(u){
+      var acts = Pengguna.hapus === u.id
+        ? '<button type="button" class="danger" data-a="u-del-yes" data-id="' + esc(u.id) + '">Ya, hapus</button><button type="button" data-a="u-del-no">Batal</button>'
+        : '<button type="button" data-a="u-edit" data-id="' + esc(u.id) + '">Ubah</button>' + (u.id === saya ? '' : '<button type="button" class="danger" data-a="u-del" data-id="' + esc(u.id) + '">Hapus</button>');
+      return '<tr class="' + (u.aktif ? '' : 'nonaktif') + '"><td><b>' + esc(u.nama) + '</b>' + (u.id === saya ? ' <span class="muted">(Anda)</span>' : '') + '</td><td>@' + esc(u.username) +
+        '</td><td><span class="tag peran-' + u.peran + '">' + esc(u.peranNama) + '</span></td><td>' + (u.aktif ? '<span class="tag arab" style="background:var(--emerald-soft);color:#047857">Aktif</span>' : '<span class="tag">Nonaktif</span>') +
+        '</td><td class="muted">' + esc(u.terakhir || '—') + '</td><td><div class="acts">' + acts + '</div></td></tr>';
+    }).join('') : '<tr class="empty-row"><td colspan="6">Belum ada pengguna.</td></tr>';
+  }
+  function resetFormPengguna(){
+    Pengguna.edit = null; $('uForm').reset(); $('uAktif').checked = true;
+    $('uJudul').textContent = 'Tambah pengguna resmi'; $('uSimpan').textContent = 'Tambah'; $('uBatal').style.display = 'none';
+    $('uSandi').placeholder = 'min. 6 huruf'; $('uSandi').required = true;
+  }
+  $('uBatal').addEventListener('click', resetFormPengguna);
+  $('uRows').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var a = b.dataset.a, u = Pengguna.list.filter(function(x){ return x.id === b.dataset.id; })[0];
+    if (a === 'u-edit' && u) {
+      Pengguna.edit = u.id; $('uNama').value = u.nama; $('uUser').value = u.username; $('uPeran').value = u.peran; $('uAktif').checked = u.aktif;
+      $('uSandi').value = ''; $('uSandi').placeholder = 'kosongkan bila tidak diganti'; $('uSandi').required = false;
+      $('uJudul').textContent = 'Ubah: ' + u.nama; $('uSimpan').textContent = 'Simpan perubahan'; $('uBatal').style.display = '';
+      $('uNama').focus(); window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (a === 'u-del') { Pengguna.hapus = b.dataset.id; renderPengguna(); }
+    else if (a === 'u-del-no') { Pengguna.hapus = null; renderPengguna(); }
+    else if (a === 'u-del-yes') {
+      Pengguna.hapus = null; b.disabled = true;
+      akunCall('hapusPengguna', [b.dataset.id]).then(function(l){ Pengguna.terima(l); toast('Akun dihapus. Soal buatannya tetap ada di Bank Soal.'); },
+        function(err){ renderPengguna(); toast((err && err.message) || 'Gagal menghapus'); });
+    }
+  });
+  $('uUser').addEventListener('input', function(){ var v = this.value.toLowerCase().replace(/[^a-z0-9._]/g, ''); if (v !== this.value) this.value = v; });
+  $('uForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var d = { id: Pengguna.edit || '', nama: $('uNama').value.trim(), username: $('uUser').value.trim(), peran: $('uPeran').value,
+      sandi: $('uSandi').value, aktif: $('uAktif').checked };
+    var btn = $('uSimpan'); btn.disabled = true;
+    akunCall('simpanPengguna', [d]).then(function(l){
+      btn.disabled = false; Pengguna.terima(l);
+      toast(d.id ? 'Akun ' + d.nama + ' diperbarui' : 'Akun ' + d.nama + ' dibuat. Berikan username “' + d.username + '” dan sandinya.');
+      resetFormPengguna();
+    }, function(err){ btn.disabled = false; toast((err && err.message) || 'Gagal menyimpan'); });
   });
 
   /* ================= Navigasi & tanggal ================= */
+  // menu dan tingkat akses: 0 = semua orang, 1 = Anggota ke atas, 2 = Pengurus ke atas, 3 = Admin
+  var AKSES = { tulis: 0, kamus: 0, soal: 1, bank: 1, materi: 2, pedoman: 3, pengguna: 3 };
+  var NAMA_MENU = { soal: 'Buat Soal', bank: 'Soal', materi: 'Materi', pedoman: 'Pedoman SOP', pengguna: 'Pengguna' };
   function route(force){
     var v = force || (location.hash || '#tulis').slice(1);
-    if (['tulis','kamus','soal','bank','pedoman'].indexOf(v) < 0) v = 'tulis';
-    if (v === 'bank') Bank.load();
-    if (v === 'pedoman' && !Role.admin) {
-      if (force === 'pedoman' || location.hash === '#pedoman') toast('Menu Pedoman SOP khusus Admin');
+    if (!(v in AKSES)) v = 'tulis';
+    if (Akun.level() < AKSES[v]) {
+      if (!Akun.memulihkan && (force || location.hash === '#' + v)) {
+        toast(Akun.user ? 'Menu ' + NAMA_MENU[v] + ' tidak tersedia untuk peran Anda' : 'Menu ' + NAMA_MENU[v] + ' khusus pengguna resmi. Silakan masuk dulu.');
+        if (!Akun.user && force) openLogin();
+      }
       v = 'tulis';
+    } else if (force && location.hash !== '#' + v) {
+      try { history.replaceState(null, '', '#' + v); } catch(e){}
     }
+    if (v === 'bank') Bank.load();
+    if (v === 'materi' || v === 'soal') Materi.load();
+    if (v === 'pengguna') Pengguna.load();
     document.querySelectorAll('.view').forEach(function(el){ el.classList.toggle('on', el.id === 'view-' + v); });
     document.querySelectorAll('nav.tabs a').forEach(function(a){ a.classList.toggle('active', a.dataset.v === v); });
   }
@@ -3059,7 +3444,7 @@ var PegonEngine = (function () {
   route();
   refreshAll();
   Kamus.connect();
-  Role.restore();
+  Akun.restore();
 })();
 </script>
 </body>
